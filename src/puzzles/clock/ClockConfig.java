@@ -38,7 +38,7 @@ public class ClockConfig implements Configuration {
     }
 
     public ArrayList<Configuration> getSolutionSteps(){
-        return Solver.solverBFS(this, this.end);
+        return Solver.solverBFS(this);
     }
 
     public ArrayList<Configuration> getNeighbors(){

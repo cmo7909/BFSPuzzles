@@ -12,7 +12,7 @@ public class Solver {
     private static int numUniqueConfigs = 0;
     private static int numTotalConfigs = 0;
 
-    public static ArrayList<Configuration> solverBFS(Configuration puzzleConfig, Integer goalNum) {
+    public static ArrayList<Configuration> solverBFS(Configuration puzzleConfig) {
         Map<Configuration, Configuration> visited = new HashMap<>();
         visited.put(puzzleConfig, null);
         Queue<Configuration> toVisit = new LinkedList<>();

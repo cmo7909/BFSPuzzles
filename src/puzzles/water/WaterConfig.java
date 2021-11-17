@@ -69,7 +69,7 @@ public class WaterConfig implements Configuration{
     }
 
     public ArrayList<Configuration> getSolutionSteps(){
-        return Solver.solverBFS(this, goal);
+        return Solver.solverBFS(this);
     }
 
     public boolean isSolution(){
