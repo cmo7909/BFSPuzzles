@@ -1,4 +1,5 @@
 package solver;
+import java.util.ArrayList;
 
 /**
  * Configuration abstraction for the solver algorithm
@@ -14,4 +15,11 @@ public interface Configuration {
     // - for get-successors: a copy constructor (can't declare here)
     // - for equality comparison and hashing
     // - for creating a displayable version the configuration
+    public ArrayList<Configuration> getNeighbors();
+
+    public ArrayList<Integer> getState();
+
+    public ArrayList<Configuration> getSolutionSteps();
+
+    public boolean isSolution();
 }
