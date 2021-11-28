@@ -13,41 +13,43 @@ public class ClockConfig implements Configuration {
     private Integer end;
     private Integer numHours;
     private Integer time;
-    
-    public ClockConfig(Integer numHours, Integer start, Integer end, Integer time){
+
+    public ClockConfig(Integer numHours, Integer start, Integer end, Integer time) {
         this.start = start;
         this.end = end;
         this.numHours = numHours;
         this.time = time;
     }
 
-    public int getTime(){
+    public int getTime() {
         return this.time;
     }
 
-    public void setTime(Integer newTime){this.time = newTime;}
+    public void setTime(Integer newTime) {
+        this.time = newTime;
+    }
 
-    public boolean isSolution(){
+    public boolean isSolution() {
         return time.equals(this.end);
     }
 
-    public ArrayList<Integer> getState(){
+    public ArrayList<Integer> getState() {
         ArrayList<Integer> currentState =
                 new ArrayList<>(Arrays.asList(this.time));
         return currentState;
     }
 
-    public ArrayList<Configuration> getSolutionSteps(){
+    public ArrayList<Configuration> getSolutionSteps() {
         return Solver.solverBFS(this);
     }
 
-    public ArrayList<Configuration> getNeighbors(){
+    public ArrayList<Configuration> getNeighbors() {
         ClockConfig n1 = new ClockConfig(this.numHours, this.start, this.end, this.time + 1);
         ClockConfig n2 = new ClockConfig(this.numHours, this.start, this.end, this.time - 1);
-        if(n1.getTime() > this.numHours){
+        if (n1.getTime() > this.numHours) {
             n1.setTime(1);
         }
-        if(n2.getTime() < 1){
+        if (n2.getTime() < 1) {
             n2.setTime(this.numHours);
         }
         ArrayList<Configuration> neighbors =
@@ -66,10 +68,5 @@ public class ClockConfig implements Configuration {
     @Override
     public int hashCode() {
         return Objects.hash(start, end, numHours, time);
-    }
-
-    @Override
-    public String toString(){
-        return "Hours: " + this.numHours + ", Start: " + this.start + ", End: " + this.end;
     }
 }

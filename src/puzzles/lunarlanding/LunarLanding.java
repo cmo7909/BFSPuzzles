@@ -1,5 +1,11 @@
 package puzzles.lunarlanding;
 
+import puzzles.tipover.model.TipOverConfig;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+
 /**
  * DESCRIPTION
  * @author YOUR NAME HERE
@@ -12,7 +18,9 @@ public class LunarLanding {
      * run the solver on the puzzle
      */
 
-    public static void main( String[] args ) {
+    public static void main( String[] args ){
         System.err.println( "REPLACE THIS METHOD!" );
+
+
     }
 }
