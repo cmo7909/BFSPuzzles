@@ -81,13 +81,33 @@ public class TipOverConfig implements Configuration {
         return neighbors;
     }
 
-    public boolean canTip(TipOverConfig check){
+    public String canTip(TipOverConfig check){
+        String directions = "";
         String currentVal = String.valueOf(check.board[check.currentPos[0]][check.currentPos[1]]);
         if(isNumeric(currentVal) && Integer.parseInt(currentVal) > 1){
-
-        }else{
-            return false;
+            int towerVal = Integer.parseInt(currentVal);
+            //Checking up from tower;
+            for(int i=1; i<=towerVal; i++){
+                    boolean willFit = true;
+                    if(check.board[check.currentPos[0 + i]][check.currentPos[1]] != 0 || check.currentPos[0 + i] <= 0){
+                        willFit = false;
+                    }
+                    if(willFit) {
+                        directions += " N";
+                    }
+            }
+            //Checking left of tower
+            for(int i=1; i<+towerVal; i++) {
+                boolean willFit = true;
+                if (check.board[check.currentPos[0]][check.currentPos[1 - i]] != 0 || check.currentPos[1 - i] <=0) {
+                    willFit = false;
+                }
+                if(willFit){
+                    directions += " W";
+                }
+            }
         }
+        return "false";
     }
 
     public boolean isNumeric(String str){
