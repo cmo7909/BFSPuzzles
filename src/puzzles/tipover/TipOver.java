@@ -1,9 +1,12 @@
 package puzzles.tipover;
 
 import puzzles.tipover.model.TipOverConfig;
+import solver.Configuration;
+import solver.Solver;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -33,8 +36,8 @@ public class TipOver {
             endPos[1] = Integer.valueOf(fields[5]);
             char [][] gameBoard = new char[numRows][numCols];
             int row = 0;
-            while(in.hasNextLine()){
-                line = in.nextLine();
+            while(row < numRows){
+                line = in.nextLine().trim();
                 fields = line.split("\\s+");
                 for(int i=0; i<numCols; i++){
                     String str = fields[i];
@@ -46,6 +49,17 @@ public class TipOver {
 
             TipOverConfig toSolve = new TipOverConfig(numRows, numCols, startPos, endPos, startPos, gameBoard);
 
+            ArrayList<Configuration> solution = toSolve.getSolutionSteps();
+            System.out.println("Total configs: " + Solver.getNumTotalConfigs());
+            System.out.println("Unique configs: " + Solver.getNumUniqueConfigs());
+            if(solution != null){
+                for(int i = 0; i < solution.size(); i++){
+                    System.out.println("Step " + i + ": \n" + solution.get(i).toString());
+                }
+            }
+            else{
+                System.out.println("No solution");
+            }
         }catch(FileNotFoundException f){
             throw new FileNotFoundException();
         }

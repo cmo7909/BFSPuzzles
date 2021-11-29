@@ -31,10 +31,21 @@ public class TipOverConfig implements Configuration {
     public TipOverConfig(int numRows, int numCols, int[] startCords, int[] goalCords, int[] currentPos, char[][] board){
         this.numRows = numRows;
         this.numCols = numCols;
-        this.startCords = startCords;
-        this.goalCords = goalCords;
-        this.currentPos = currentPos;
-        this.board = board;
+        this.startCords = new int[2];
+        this.startCords[0] = startCords[0];
+        this.startCords[1] = startCords[1];
+        this.goalCords = new int[2];
+        this.goalCords[0] = goalCords[0];
+        this.goalCords[1] = goalCords[1];
+        this.currentPos = new int[2];
+        this.currentPos[0] = currentPos[0];
+        this.currentPos[1] = currentPos[1];
+        this.board = new char[numRows][numCols];
+        for(int r=0; r<numRows; r++){
+            for(int c =0; c<numCols; c++){
+                this.board[r][c] = board[r][c];
+            }
+        }
     }
 
     public ArrayList<Configuration> getNeighbors() {
@@ -70,6 +81,27 @@ public class TipOverConfig implements Configuration {
         return neighbors;
     }
 
+    public boolean canTip(TipOverConfig check){
+        String currentVal = String.valueOf(check.board[check.currentPos[0]][check.currentPos[1]]);
+        if(isNumeric(currentVal) && Integer.parseInt(currentVal) > 1){
+
+        }else{
+            return false;
+        }
+    }
+
+    public boolean isNumeric(String str){
+        if(str == null){
+            return false;
+        }
+        try{
+            double d = Double.parseDouble(str);
+        }catch (NumberFormatException n){
+            return false;
+        }
+        return true;
+    }
+
     public boolean isSolution(){
         return this.currentPos[0] == this.goalCords[0] && this.currentPos[1] == this.goalCords[1];
     }
@@ -102,5 +134,33 @@ public class TipOverConfig implements Configuration {
         currentState.add(currentPos[0]);
         currentState.add(currentPos[1]);
         return currentState;
+    }
+
+    public String toString(){
+        String output = "   ";
+
+        for(int i=0; i<numCols; i++){
+            output += "  " + i;
+        }
+        output += "\n";
+        output += "    _____________________";
+        output += "\n";
+        for(int i=0; i<numRows; i++){
+            output += i + " |";
+            for(int j=0; j<numCols; j++){
+                char toAdd = board[i][j];
+                if(toAdd == '0'){
+                    output += "  _";
+                }else if(i == currentPos[0] && j == currentPos[1]){
+                    output += " *" + toAdd;
+                }else if(i == goalCords[0] && j == goalCords[1]){
+                    output += " !" + toAdd;
+                }else{
+                    output += "  " + toAdd;
+                }
+            }
+            output += "\n";
+        }
+        return output;
     }
 }
