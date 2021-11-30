@@ -11,7 +11,7 @@ import java.util.Scanner;
 
 /**
  * DESCRIPTION
- * @author YOUR NAME HERE
+ * @author Craig O'Connor
  * November 2021
  */
 public class TipOver {
@@ -31,6 +31,7 @@ public class TipOver {
             int[] startPos = new int[2];
             startPos[0] = Integer.valueOf(fields[2]);
             startPos[1] = Integer.valueOf(fields[3]);
+            System.out.println("Row: " + fields[2] + " Col: " + fields[3]);
             int[] endPos = new int[2];
             endPos[0] = Integer.valueOf(fields[4]);
             endPos[1] = Integer.valueOf(fields[5]);

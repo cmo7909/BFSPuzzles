@@ -40,6 +40,7 @@ public class TipOverConfig implements Configuration {
         this.currentPos = new int[2];
         this.currentPos[0] = currentPos[0];
         this.currentPos[1] = currentPos[1];
+        System.out.println("Row: " + currentPos[0] + " Col: " + currentPos[1]);
         this.board = new char[numRows][numCols];
         for(int r=0; r<numRows; r++){
             for(int c =0; c<numCols; c++){
@@ -50,9 +51,12 @@ public class TipOverConfig implements Configuration {
 
     public ArrayList<Configuration> getNeighbors() {
         ArrayList<Configuration> neighbors = new ArrayList<>();
+        //Checking North
+
         try{
             int[] newPos = currentPos;
             newPos[0] -= 1;
+            //Add north check for a square that is just able to be moved to
             TipOverConfig t1 = new TipOverConfig(this.numRows, this.numCols, this.startCords, this.goalCords, newPos, this.board);
             ArrayList<String> towerTipDirections = tipDirections(t1);
             if(towerTipDirections != null) {
@@ -63,7 +67,7 @@ public class TipOverConfig implements Configuration {
             }else {
                 neighbors.add(t1);
             }
-        }catch(NullPointerException n){
+        }catch(IndexOutOfBoundsException n){
         }
         try{
             int[] newPos = currentPos;
@@ -71,14 +75,14 @@ public class TipOverConfig implements Configuration {
             TipOverConfig t1 = new TipOverConfig(this.numRows, this.numCols, this.startCords, this.goalCords, newPos, this.board);
             ArrayList<String> towerTipDirections = tipDirections(t1);
             if(towerTipDirections != null) {
-                int towerVal = Integer.valueOf(board[t1.currentPos[0]][t1.currentPos[1]]);
+                int towerVal = Integer.valueOf(t1.board[t1.currentPos[0]][t1.currentPos[1]]);
                 for(String str: towerTipDirections){
                     neighbors.add(updateBoard(t1,str,towerVal));
                 }
             }else {
                 neighbors.add(t1);
             }
-        }catch(NullPointerException n){
+        }catch(IndexOutOfBoundsException n){
         }
         try{
             int[] newPos = currentPos;
@@ -93,7 +97,7 @@ public class TipOverConfig implements Configuration {
             }else {
                 neighbors.add(t1);
             }
-        }catch(NullPointerException n){
+        }catch(IndexOutOfBoundsException n){
         }
         try{
             int[] newPos = currentPos;
@@ -108,7 +112,7 @@ public class TipOverConfig implements Configuration {
             }else {
                 neighbors.add(t1);
             }
-        }catch(NullPointerException n){
+        }catch(IndexOutOfBoundsException n){
         }
         return neighbors;
     }
