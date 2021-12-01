@@ -40,7 +40,6 @@ public class TipOverConfig implements Configuration {
         this.currentPos = new int[2];
         this.currentPos[0] = currentPos[0];
         this.currentPos[1] = currentPos[1];
-        System.out.println("Row: " + currentPos[0] + " Col: " + currentPos[1]);
         this.board = new char[numRows][numCols];
         for(int r=0; r<numRows; r++){
             for(int c =0; c<numCols; c++){
@@ -51,82 +50,79 @@ public class TipOverConfig implements Configuration {
 
     public ArrayList<Configuration> getNeighbors() {
         ArrayList<Configuration> neighbors = new ArrayList<>();
-        //Checking North
-
+        //checking north
+        boolean foundNeighbor = false;
         try{
-            int[] newPos = currentPos;
+            int[] newPos = new int[2];
+            newPos[0] = currentPos[0];
+            newPos[1] = currentPos[1];
             newPos[0] -= 1;
-            //Add north check for a square that is just able to be moved to
-            TipOverConfig t1 = new TipOverConfig(this.numRows, this.numCols, this.startCords, this.goalCords, newPos, this.board);
-            ArrayList<String> towerTipDirections = tipDirections(t1);
-            if(towerTipDirections != null) {
-                int towerVal = Integer.valueOf(board[t1.currentPos[0]][t1.currentPos[1]]);
-                for(String str: towerTipDirections){
-                    neighbors.add(updateBoard(t1,str,towerVal));
-                }
-            }else {
-                neighbors.add(t1);
+            if(this.board[newPos[0]][newPos[1]] != '0'){
+                TipOverConfig t = new TipOverConfig(this.numRows, this.numCols, this.startCords, this.goalCords, newPos, this.board);
+                neighbors.add(t);
+                foundNeighbor = true;
             }
-        }catch(IndexOutOfBoundsException n){
-        }
+        }catch(IndexOutOfBoundsException i){}
+        //Checking West
         try{
-            int[] newPos = currentPos;
+            int[] newPos = new int[2];
+            newPos[0] = currentPos[0];
+            newPos[1] = currentPos[1];
             newPos[1] -= 1;
-            TipOverConfig t1 = new TipOverConfig(this.numRows, this.numCols, this.startCords, this.goalCords, newPos, this.board);
-            ArrayList<String> towerTipDirections = tipDirections(t1);
-            if(towerTipDirections != null) {
-                int towerVal = Integer.valueOf(t1.board[t1.currentPos[0]][t1.currentPos[1]]);
-                for(String str: towerTipDirections){
-                    neighbors.add(updateBoard(t1,str,towerVal));
-                }
-            }else {
-                neighbors.add(t1);
+            if(this.board[newPos[0]][newPos[1]] != '0'){
+                TipOverConfig t = new TipOverConfig(this.numRows, this.numCols, this.startCords, this.goalCords, newPos, this.board);
+                neighbors.add(t);
+                foundNeighbor = true;
             }
-        }catch(IndexOutOfBoundsException n){
-        }
+        }catch(IndexOutOfBoundsException i){}
+        //Checking south
         try{
-            int[] newPos = currentPos;
-            newPos[1] += 1;
-            TipOverConfig t1 = new TipOverConfig(this.numRows, this.numCols, this.startCords, this.goalCords, newPos, this.board);
-            ArrayList<String> towerTipDirections = tipDirections(t1);
-            if(towerTipDirections != null) {
-                int towerVal = Integer.valueOf(board[t1.currentPos[0]][t1.currentPos[1]]);
-                for(String str: towerTipDirections){
-                    neighbors.add(updateBoard(t1,str,towerVal));
-                }
-            }else {
-                neighbors.add(t1);
+            int[] newPos = new int[2];
+            newPos[0] = currentPos[0];
+            newPos[1] = currentPos[1];
+            newPos[0] += 1;
+            if(this.board[newPos[0]][newPos[1]] != '0'){
+                TipOverConfig t = new TipOverConfig(this.numRows, this.numCols, this.startCords, this.goalCords, newPos, this.board);
+                neighbors.add(t);
+                foundNeighbor = true;
             }
-        }catch(IndexOutOfBoundsException n){
-        }
+        }catch(IndexOutOfBoundsException i){}
+        //Checking East
         try{
-            int[] newPos = currentPos;
+            int[] newPos = new int[2];
+            newPos[0] = currentPos[0];
+            newPos[1] = currentPos[1];
             newPos[1] += 1;
-            TipOverConfig t1 = new TipOverConfig(this.numRows, this.numCols, this.startCords, this.goalCords, newPos, this.board);
-            ArrayList<String> towerTipDirections = tipDirections(t1);
-            if(towerTipDirections != null) {
-                int towerVal = Integer.valueOf(board[t1.currentPos[0]][t1.currentPos[1]]);
-                for(String str: towerTipDirections){
-                    neighbors.add(updateBoard(t1,str,towerVal));
-                }
-            }else {
-                neighbors.add(t1);
+            if(this.board[newPos[0]][newPos[1]] != '0'){
+                TipOverConfig t = new TipOverConfig(this.numRows, this.numCols, this.startCords, this.goalCords, newPos, this.board);
+                neighbors.add(t);
+                foundNeighbor = true;
             }
-        }catch(IndexOutOfBoundsException n){
+        }catch(IndexOutOfBoundsException i){}
+        if(!(foundNeighbor)) {
+            int towerSize = Integer.parseInt(String.valueOf(this.board[this.currentPos[0]][this.currentPos[1]]));
+            if (towerSize > 1) {
+                ArrayList<String> towerTipDirections = tipDirections(this);
+                if (towerTipDirections != null) {
+                    for (String str : towerTipDirections) {
+                        neighbors.add(updateBoard(this, str, towerSize));
+                    }
+                }
+            }
         }
         return neighbors;
     }
 
     public ArrayList<String> tipDirections(TipOverConfig check){
         ArrayList<String> directions = new ArrayList<>();
-        if(check.currentPos[0] < numRows && check.currentPos[0] > 0 && check.currentPos[1] < numCols && check.currentPos[1] > 0) {
+        if(check.currentPos[0] < numRows && check.currentPos[0] >= 0 && check.currentPos[1] < numCols && check.currentPos[1] >= 0) {
             String currentVal = String.valueOf(check.board[check.currentPos[0]][check.currentPos[1]]);
             if (isNumeric(currentVal) && Integer.parseInt(currentVal) > 1) {
                 int towerVal = Integer.parseInt(currentVal);
                 //Checking up from tower;
                 for (int i = 1; i <= towerVal; i++) {
                     boolean willFit = true;
-                    if (check.board[check.currentPos[0 + i]][check.currentPos[1]] != 0 || check.currentPos[0 + i] < 0) {
+                    if (check.currentPos[0] + i < 0 && check.board[check.currentPos[0] + i][check.currentPos[1]] != '0') {
                         willFit = false;
                     }
                     if (willFit) {
@@ -134,9 +130,9 @@ public class TipOverConfig implements Configuration {
                     }
                 }
                 //Checking left of tower
-                for (int i = 1; i <= towerVal; i++) {
+                for (int i = 0; i < towerVal; i++) {
                     boolean willFit = true;
-                    if (check.board[check.currentPos[0]][check.currentPos[1 - i]] != 0 || check.currentPos[1 - i] < 0) {
+                    if (check.currentPos[1] - i >= 0 && check.board[check.currentPos[0]][check.currentPos[1] - i] != '0') {
                         willFit = false;
                     }
                     if (willFit) {
@@ -146,7 +142,7 @@ public class TipOverConfig implements Configuration {
                 //Checking below tower
                 for (int i = 1; i <= towerVal; i++) {
                     boolean willFit = true;
-                    if (check.board[check.currentPos[0 + i]][check.currentPos[1]] != 0 || check.currentPos[0 + i] > numRows) {
+                    if (check.currentPos[0] + i >= 0 && check.board[check.currentPos[0] + i][check.currentPos[1]] != '0') {
                         willFit = false;
                     }
                     if (willFit) {
@@ -156,7 +152,7 @@ public class TipOverConfig implements Configuration {
                 //Checking to the right of the tower
                 for (int i = 1; i <= towerVal; i++) {
                     boolean willFit = true;
-                    if (check.board[check.currentPos[0]][check.currentPos[1 + i]] != 0 || check.currentPos[1 + i] > numCols) {
+                    if (check.currentPos[1] + i < numCols && check.board[check.currentPos[0]][check.currentPos[1] + i] != '0') {
                         willFit = false;
                     }
                     if (willFit) {
@@ -174,19 +170,19 @@ public class TipOverConfig implements Configuration {
         TipOverConfig copy = toUpdate;
         if(direction == "N"){
             for(int i=1; i<amountToReplace;i++){
-                copy.board[toUpdate.currentPos[0 - i]][toUpdate.currentPos[1]] = '1';
+                copy.board[toUpdate.currentPos[0] - i][toUpdate.currentPos[1]] = '1';
             }
         }else if(direction == "W"){
             for(int i=1; i<amountToReplace;i++){
-                copy.board[toUpdate.currentPos[0]][toUpdate.currentPos[1 - i]] = '1';
+                copy.board[toUpdate.currentPos[0]][toUpdate.currentPos[1] - i] = '1';
             }
         }else if(direction == "S"){
             for(int i=1; i<amountToReplace;i++){
-                copy.board[toUpdate.currentPos[0 + i]][toUpdate.currentPos[1]] = '1';
+                copy.board[toUpdate.currentPos[0] + i][toUpdate.currentPos[1]] = '1';
             }
         }else if(direction == "E"){
             for(int i=1; i<amountToReplace;i++){
-                copy.board[toUpdate.currentPos[0]][toUpdate.currentPos[1 + i]] = '1';
+                copy.board[toUpdate.currentPos[0]][toUpdate.currentPos[1] + i] = '1';
             }
         }
         return copy;
@@ -244,8 +240,12 @@ public class TipOverConfig implements Configuration {
         for(int i=0; i<numCols; i++){
             output += "  " + i;
         }
-        output += "\n";
-        output += "    _____________________";
+        output += "\n    ";
+
+        int numUnderscores = numRows * 3;
+        for(int i=0;i<numUnderscores;i++){
+            output += "_";
+        }
         output += "\n";
         for(int i=0; i<numRows; i++){
             output += i + " |";
