@@ -99,16 +99,14 @@ public class TipOverConfig implements Configuration {
                 foundNeighbor = true;
             }
         }catch(IndexOutOfBoundsException i){}
-        if(!(foundNeighbor)) {
-            int towerSize = Integer.parseInt(String.valueOf(this.board[this.currentPos[0]][this.currentPos[1]]));
-            if (towerSize > 1) {
+        int towerSize = Integer.parseInt(String.valueOf(this.board[this.currentPos[0]][this.currentPos[1]]));
+        if(!(foundNeighbor) || towerSize > 1) {
                 ArrayList<String> towerTipDirections = tipDirections(this);
                 if (towerTipDirections != null) {
                     for (String str : towerTipDirections) {
                         neighbors.add(updateBoard(this, str, towerSize));
                     }
                 }
-            }
         }
         return neighbors;
     }
@@ -120,45 +118,47 @@ public class TipOverConfig implements Configuration {
             if (isNumeric(currentVal) && Integer.parseInt(currentVal) > 1) {
                 int towerVal = Integer.parseInt(currentVal);
                 //Checking up from tower;
+                boolean willFit = true;
                 for (int i = 1; i <= towerVal; i++) {
-                    boolean willFit = true;
-                    if (check.currentPos[0] + i < 0 && check.board[check.currentPos[0] + i][check.currentPos[1]] != '0') {
+
+                    if (check.currentPos[0] - i < 0 || check.board[check.currentPos[0] - i][check.currentPos[1]] != '0') {
                         willFit = false;
                     }
+                }
                     if (willFit) {
                         directions.add("N");
                     }
-                }
+
                 //Checking left of tower
-                for (int i = 0; i < towerVal; i++) {
-                    boolean willFit = true;
-                    if (check.currentPos[1] - i >= 0 && check.board[check.currentPos[0]][check.currentPos[1] - i] != '0') {
+                willFit = true;
+                for (int i = 1; i <= towerVal; i++) {
+                    if (check.currentPos[1] - i < 0 || check.board[check.currentPos[0]][check.currentPos[1] - i] != '0') {
                         willFit = false;
                     }
+                }
                     if (willFit) {
                         directions.add("W");
                     }
-                }
                 //Checking below tower
+                willFit = true;
                 for (int i = 1; i <= towerVal; i++) {
-                    boolean willFit = true;
-                    if (check.currentPos[0] + i >= 0 && check.board[check.currentPos[0] + i][check.currentPos[1]] != '0') {
+                    if (check.currentPos[0] + i >= numRows || check.board[check.currentPos[0] + i][check.currentPos[1]] != '0') {
                         willFit = false;
                     }
+                }
                     if (willFit) {
                         directions.add("S");
                     }
-                }
                 //Checking to the right of the tower
+                willFit = true;
                 for (int i = 1; i <= towerVal; i++) {
-                    boolean willFit = true;
-                    if (check.currentPos[1] + i < numCols && check.board[check.currentPos[0]][check.currentPos[1] + i] != '0') {
+                    if (check.currentPos[1] + i >= numCols || check.board[check.currentPos[0]][check.currentPos[1] + i] != '0') {
                         willFit = false;
                     }
+                }
                     if (willFit) {
                         directions.add("E");
                     }
-                }
             } else {
                 directions.add(null);
             }
@@ -167,23 +167,31 @@ public class TipOverConfig implements Configuration {
     }
 
     public TipOverConfig updateBoard(TipOverConfig toUpdate, String direction, int amountToReplace){
-        TipOverConfig copy = toUpdate;
+        TipOverConfig copy = new TipOverConfig(this.numRows, this.numCols, this.startCords, this.goalCords, this.currentPos, this.board);
         if(direction == "N"){
-            for(int i=1; i<amountToReplace;i++){
+            copy.board[this.currentPos[0]][this.currentPos[1]] = '0';
+            for(int i=1; i<=amountToReplace;i++){
                 copy.board[toUpdate.currentPos[0] - i][toUpdate.currentPos[1]] = '1';
             }
+            copy.currentPos[0] -= 1;
         }else if(direction == "W"){
-            for(int i=1; i<amountToReplace;i++){
+            copy.board[this.currentPos[0]][this.currentPos[1]] = '0';
+            for(int i=1; i<=amountToReplace;i++){
                 copy.board[toUpdate.currentPos[0]][toUpdate.currentPos[1] - i] = '1';
             }
+            copy.currentPos[1] -= 1;
         }else if(direction == "S"){
-            for(int i=1; i<amountToReplace;i++){
+            copy.board[this.currentPos[0]][this.currentPos[1]] = '0';
+            for(int i=1; i<=amountToReplace;i++){
                 copy.board[toUpdate.currentPos[0] + i][toUpdate.currentPos[1]] = '1';
             }
+            copy.currentPos[0] += 1;
         }else if(direction == "E"){
-            for(int i=1; i<amountToReplace;i++){
+            copy.board[this.currentPos[0]][this.currentPos[1]] = '0';
+            for(int i=1; i<=amountToReplace;i++){
                 copy.board[toUpdate.currentPos[0]][toUpdate.currentPos[1] + i] = '1';
             }
+            copy.currentPos[1] += 1;
         }
         return copy;
     }
@@ -214,17 +222,32 @@ public class TipOverConfig implements Configuration {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        TipOverConfig that = (TipOverConfig) o;
-        return Objects.equals(numRows, that.numRows) && Objects.equals(numCols, that.numCols) && Objects.equals(startCords[0], that.startCords[0])
-                && Objects.equals(startCords[1], that.startCords[1]) && Objects.equals(goalCords[0], that.goalCords[0]) && Objects.equals(goalCords[1], that.goalCords[1])
-                && Objects.equals(currentPos[0], that.currentPos[0]) && Objects.equals(currentPos[1], that.currentPos[1]) && Objects.equals(board[1], that.board[1]);
+        if(o instanceof TipOverConfig) {
+            TipOverConfig that = (TipOverConfig) o;
+            return numRows == that.numRows && numCols == that.numCols && startCords[0] == that.startCords[0]
+                    && startCords[1] == that.startCords[1] && goalCords[0] == that.goalCords[0] && goalCords[1] == that.goalCords[1]
+                    && currentPos[0] == that.currentPos[0] && currentPos[1] == that.currentPos[1] && sameGrid(this.board, that.board)
+                    && this.hashCode() == that.hashCode();
+        }
+        return false;
+    }
+
+    public boolean sameGrid(char[][] firstGrid, char[][]secondGrid){
+        for(int i=0;i<numRows;i++){
+            for(int j=0;j<numCols;j++){
+                if(firstGrid[i][j] != secondGrid[i][j]){
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(numRows, numCols, startCords, goalCords, currentPos, board);
+        int hash = Objects.hash(numRows, numCols, startCords, goalCords, currentPos, board);
+        System.out.println("Hash value: " + hash);
+        return hash;
     }
 
     public ArrayList<Integer> getState() {

@@ -24,6 +24,7 @@ public class Solver {
             for(int i = 0; i < neighbors.size(); i++) {
                 numTotalConfigs++;
                 if (!visited.containsKey(neighbors.get(i))) {
+                    System.out.println(neighbors.get(i)); //Testing print statement
                     visited.put(neighbors.get(i), currentVal);
                     toVisit.offer(neighbors.get(i));
                 }
