@@ -21,10 +21,11 @@ public class Solver {
         while (!toVisit.isEmpty() && !toVisit.peek().isSolution()) {
             Configuration currentVal = toVisit.remove();
             ArrayList<Configuration> neighbors = currentVal.getNeighbors();
+            //System.out.println("Current Val: \n" + currentVal);
             for(int i = 0; i < neighbors.size(); i++) {
                 numTotalConfigs++;
                 if (!visited.containsKey(neighbors.get(i))) {
-                    System.out.println(neighbors.get(i)); //Testing print statement
+                    //System.out.println(neighbors.get(i)); //Testing print statement
                     visited.put(neighbors.get(i), currentVal);
                     toVisit.offer(neighbors.get(i));
                 }

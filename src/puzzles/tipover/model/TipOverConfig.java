@@ -227,7 +227,7 @@ public class TipOverConfig implements Configuration {
             return numRows == that.numRows && numCols == that.numCols && startCords[0] == that.startCords[0]
                     && startCords[1] == that.startCords[1] && goalCords[0] == that.goalCords[0] && goalCords[1] == that.goalCords[1]
                     && currentPos[0] == that.currentPos[0] && currentPos[1] == that.currentPos[1] && sameGrid(this.board, that.board)
-                    && this.hashCode() == that.hashCode();
+                    /*&& this.hashCode() == that.hashCode()*/;
         }
         return false;
     }
@@ -245,9 +245,7 @@ public class TipOverConfig implements Configuration {
 
     @Override
     public int hashCode() {
-        int hash = Objects.hash(numRows, numCols, startCords, goalCords, currentPos, board);
-        System.out.println("Hash value: " + hash);
-        return hash;
+        return Objects.hash(numRows, numCols, startCords, goalCords, currentPos, board);
     }
 
     public ArrayList<Integer> getState() {

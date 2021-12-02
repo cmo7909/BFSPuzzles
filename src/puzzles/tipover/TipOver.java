@@ -48,6 +48,9 @@ public class TipOver {
             }
 
             TipOverConfig toSolve = new TipOverConfig(numRows, numCols, startPos, endPos, startPos, gameBoard);
+            //TipOverConfig toSolveTwo = new TipOverConfig(numRows, numCols, startPos, endPos, startPos, gameBoard);
+
+            //System.out.println(toSolve.equals(toSolveTwo));
 
             ArrayList<Configuration> solution = toSolve.getSolutionSteps();
             System.out.println("Total configs: " + Solver.getNumTotalConfigs());
