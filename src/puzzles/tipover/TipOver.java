@@ -21,7 +21,7 @@ public class TipOver {
      * run the solver on the puzzle
      */
 
-    public static void main( String[] args ) throws FileNotFoundException {
+    public static void main( String[] args ) throws FileNotFoundException{
         String fileName = args[0];
         try(Scanner in = new Scanner(new File(fileName))){
             String line = in.nextLine();

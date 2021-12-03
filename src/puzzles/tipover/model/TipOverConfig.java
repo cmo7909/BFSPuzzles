@@ -48,6 +48,49 @@ public class TipOverConfig implements Configuration {
         }
     }
 
+    public void setNumRows(int val){
+        this.numRows = val;
+    }
+    public int getNumRows(){
+        return this.numRows;
+    }
+    public void setNumCols(int val){
+        this.numCols = val;
+    }
+    public int getNumCols(){
+        return this.numCols;
+    }
+    public void setStartCords(int[] pos){
+        this.startCords[0] = pos[0];
+        this.startCords[1] = startCords[1];
+    }
+    public int[] getStartCords(){
+        return this.startCords;
+    }
+    public int[] getGoalCords(){
+        return this.goalCords;
+    }
+    public void setGoalCords(int[] pos){
+        this.goalCords[0] = pos[0];
+        this.goalCords[1] = pos[1];
+    }
+    public void setCurrentPos(int[] pos){
+        this.currentPos[0] = pos[0];
+        this.currentPos[1] = pos[1];
+    }
+    public int[] getCurrentPos(){
+        return this.currentPos;
+    }
+    public char[][] getBoard(){
+        return this.board;
+    }
+    public void setBoard(char[][] otherBoard){
+        for(int i=0; i<numRows; i++){
+            for(int j=0; j<numCols;j++){
+                this.board[i][j] = otherBoard[i][j];
+            }
+        }
+    }
     public ArrayList<Configuration> getNeighbors() {
         ArrayList<Configuration> neighbors = new ArrayList<>();
         //checking north
