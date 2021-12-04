@@ -20,10 +20,12 @@ public class TipOverPTUI implements Observer<TipOverModel, Object> {
      * Model for view controller
      */
     private TipOverModel model;
+    private TipOverConfig copy;
 
     public TipOverPTUI(int rows, int cols, int[] start, int[] end, int[] current, char[][] game){
         TipOverConfig modelConfig = new TipOverConfig(rows, cols, start, end, current, game);
         TipOverConfig copyModel = new TipOverConfig(rows, cols, start, end, current, game);
+        this.copy = copyModel;
 
         this.model = new TipOverModel(modelConfig, copyModel);
 
@@ -40,11 +42,13 @@ public class TipOverPTUI implements Observer<TipOverModel, Object> {
                 if (words[0].startsWith("q")) {
                     break;
                 } else if (words[0].startsWith("r")) {
-
+                    this.model.reload(copy);
+                    update(this.model, null);
                 } else if (words[0].startsWith("l")) {
                     this.model.load();
                 } else if (words[0].startsWith("h")) {
-                    //this.model.hint();
+                    this.model.hint();
+                    update(this.model, null);
                 } else if (words[0].startsWith("s")) {
                     System.out.println(this.model.toString());
                 } else {
