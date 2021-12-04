@@ -40,12 +40,13 @@ public class TipOverPTUI implements Observer<TipOverModel, Object> {
             String[] words = line.split("\\s+");
             if(words.length == 1) {
                 if (words[0].startsWith("q")) {
-                    break;
+                    System.exit(1);
                 } else if (words[0].startsWith("r")) {
                     this.model.reload(copy);
                     update(this.model, null);
                 } else if (words[0].startsWith("l")) {
                     this.model.load();
+                    update(this.model, null);
                 } else if (words[0].startsWith("h")) {
                     this.model.hint();
                     update(this.model, null);

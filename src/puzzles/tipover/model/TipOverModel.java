@@ -47,25 +47,22 @@ public class TipOverModel {
 
     public void load(){
         Scanner in = new Scanner(System.in);
-        for( ; ; ) {
-            System.out.println("Type a new file to load");
-            System.out.println("data/tipover/tipover-0.txt");
-            System.out.println("data/tipover/tipover-1.txt");
-            System.out.println("data/tipover/tipover-2.txt");
-            System.out.println("data/tipover/tipover-3.txt");
-            System.out.println("data/tipover/tipover-4.txt");
-            System.out.println("data/tipover/tipover-5.txt");
-            System.out.println("data/tipover/tipover-6.txt");
-            System.out.println("data/tipover/tipover-7.txt");
-            System.out.println("data/tipover/tipover-8.txt");
-            System.out.println("data/tipover/tipover-9.txt");
-            System.out.println("data/tipover/tipover-a.txt");
-            System.out.print("> ");
-            String line = in.nextLine();
-            String[] arg = {line};
-            TipOverPTUI.main(arg);
-        }
-
+        System.out.println("Type a new file to load");
+        System.out.println("data/tipover/tipover-0.txt");
+        System.out.println("data/tipover/tipover-1.txt");
+        System.out.println("data/tipover/tipover-2.txt");
+        System.out.println("data/tipover/tipover-3.txt");
+        System.out.println("data/tipover/tipover-4.txt");
+        System.out.println("data/tipover/tipover-5.txt");
+        System.out.println("data/tipover/tipover-6.txt");
+        System.out.println("data/tipover/tipover-7.txt");
+        System.out.println("data/tipover/tipover-8.txt");
+        System.out.println("data/tipover/tipover-9.txt");
+        System.out.println("data/tipover/tipover-a.txt");
+        System.out.print("> ");
+        String line = in.nextLine();
+        String[] arg = {line};
+        TipOverPTUI.main(arg);
     }
 
     public void reload(TipOverConfig that){
