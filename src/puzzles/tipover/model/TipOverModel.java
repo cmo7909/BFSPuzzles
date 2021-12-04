@@ -1,8 +1,13 @@
 package puzzles.tipover.model;
 
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Scanner;
 
+import puzzles.tipover.ptui.TipOverPTUI;
+import solver.Configuration;
 import util.Observer;
 
 /**
@@ -41,7 +46,26 @@ public class TipOverModel {
     }
 
     public void load(){
-        System.out.println("test");
+        Scanner in = new Scanner(System.in);
+        for( ; ; ) {
+            System.out.println("Type a new file to load");
+            System.out.println("data/tipover/tipover-0.txt");
+            System.out.println("data/tipover/tipover-1.txt");
+            System.out.println("data/tipover/tipover-2.txt");
+            System.out.println("data/tipover/tipover-3.txt");
+            System.out.println("data/tipover/tipover-4.txt");
+            System.out.println("data/tipover/tipover-5.txt");
+            System.out.println("data/tipover/tipover-6.txt");
+            System.out.println("data/tipover/tipover-7.txt");
+            System.out.println("data/tipover/tipover-8.txt");
+            System.out.println("data/tipover/tipover-9.txt");
+            System.out.println("data/tipover/tipover-a.txt");
+            System.out.print("> ");
+            String line = in.nextLine();
+            String[] arg = {line};
+            TipOverPTUI.main(arg);
+        }
+
     }
 
     public void reload(TipOverConfig that){
@@ -53,7 +77,22 @@ public class TipOverModel {
         this.currentConfig.setBoard(that.getBoard());
     }
 
+    public void hint(){
+        ArrayList<Configuration> movableNeighbors = currentConfig.getSolutionSteps();
+        for(int i=0; i<movableNeighbors.size() - 1; i++){
+            TipOverConfig that = (TipOverConfig) movableNeighbors.get(i);
+            if(that.getCurrentPos()[0] == currentConfig.getCurrentPos()[0] && that.getCurrentPos()[1] == currentConfig.getCurrentPos()[1]){
+                currentConfig = (TipOverConfig) movableNeighbors.get(i + 1);
+                break;
+            }
+        }
+
+    }
+
+    /*Functions for moving based on user input */
+
     public void move(String direction){
+        try{
         if(direction.startsWith("n")){
             int[] updatedCords = new int[2];
             updatedCords[0] = -1;
@@ -64,9 +103,13 @@ public class TipOverModel {
             valCords[1] = currentConfig.getCurrentPos()[1] + updatedCords[1];
             if(currentConfig.getBoard()[valCords[0]][valCords[1]] == '0' &&
                     Integer.parseInt(String.valueOf(currentConfig.getBoard()[currentConfig.getCurrentPos()[0]][currentConfig.getCurrentPos()[1]])) > 1){
-                moveFunctionTip(valCords, "n");
+                moveFunctionTip(currentConfig.getCurrentPos(), "n");
             }else {
-                moveFunction(updatedCords);
+                try {
+                    moveFunction(updatedCords);
+                }catch(ArrayIndexOutOfBoundsException a){
+                    System.out.println("Please Enter a Valid Move");
+                }
             }
         }else if(direction.startsWith("w")){
             int[] updatedCords = new int[2];
@@ -79,9 +122,13 @@ public class TipOverModel {
             valCords[1] = currentConfig.getCurrentPos()[1] + updatedCords[1];
             if(currentConfig.getBoard()[valCords[0]][valCords[1]] == '0' &&
                     Integer.parseInt(String.valueOf(currentConfig.getBoard()[currentConfig.getCurrentPos()[0]][currentConfig.getCurrentPos()[1]])) > 1){
-                moveFunctionTip(valCords, "w");
+                moveFunctionTip(currentConfig.getCurrentPos(), "w");
             }else {
-                moveFunction(updatedCords);
+                try {
+                    moveFunction(updatedCords);
+                }catch(ArrayIndexOutOfBoundsException a){
+                    System.out.println("Please Enter a Valid Move");
+                }
             }
         }else if(direction.startsWith("s")){
             int[] updatedCords = new int[2];
@@ -94,25 +141,32 @@ public class TipOverModel {
             valCords[1] = currentConfig.getCurrentPos()[1] + updatedCords[1];
             if(currentConfig.getBoard()[valCords[0]][valCords[1]] == '0' &&
                     Integer.parseInt(String.valueOf(currentConfig.getBoard()[currentConfig.getCurrentPos()[0]][currentConfig.getCurrentPos()[1]])) > 1){
-                moveFunctionTip(valCords, "s");
+                moveFunctionTip(currentConfig.getCurrentPos(), "s");
             }else {
-                moveFunction(updatedCords);
+                try {
+                    moveFunction(updatedCords);
+                }catch(ArrayIndexOutOfBoundsException a){
+                    System.out.println("Please Enter a Valid Move");
+                }
             }
-        }else if(direction.startsWith("e")){
-            int[] updatedCords = new int[2];
-            updatedCords[0] = 0;
-            updatedCords[1] = 1;
+        }else if(direction.startsWith("e")) {
+                int[] updatedCords = new int[2];
+                updatedCords[0] = 0;
+                updatedCords[1] = 1;
 
-            //Checking to see if the tower needs to be tipped
-            int[] valCords = new int[2];
-            valCords[0] = currentConfig.getCurrentPos()[0] + updatedCords[0];
-            valCords[1] = currentConfig.getCurrentPos()[1] + updatedCords[1];
-            if(currentConfig.getBoard()[valCords[0]][valCords[1]] == '0' &&
-                    Integer.parseInt(String.valueOf(currentConfig.getBoard()[currentConfig.getCurrentPos()[0]][currentConfig.getCurrentPos()[1]])) > 1){
-                moveFunctionTip(currentConfig.getCurrentPos(), "e");
-            }else {
-                moveFunction(updatedCords);
+                //Checking to see if the tower needs to be tipped
+                int[] valCords = new int[2];
+                valCords[0] = currentConfig.getCurrentPos()[0];
+                valCords[1] = currentConfig.getCurrentPos()[1] + 1;
+                if (currentConfig.getBoard()[valCords[0]][valCords[1]] == '0' &&
+                        Integer.parseInt(String.valueOf(currentConfig.getBoard()[currentConfig.getCurrentPos()[0]][currentConfig.getCurrentPos()[1]])) > 1) {
+                    moveFunctionTip(currentConfig.getCurrentPos(), "e");
+                } else {
+                    moveFunction(updatedCords);
+                }
             }
+        }catch(ArrayIndexOutOfBoundsException a){
+            System.out.println("Please Enter a Valid Move");
         }
     }
 
@@ -130,28 +184,32 @@ public class TipOverModel {
     public void moveFunctionTip(int[] cords, String direction){
         int towerSize = Integer.parseInt(String.valueOf(currentConfig.getBoard()[currentConfig.getCurrentPos()[0]][currentConfig.getCurrentPos()[1]]));
         if(direction == "n" && canTip(cords, direction)){
-            for(int i=0; i<= towerSize; i++){
-                currentConfig.getBoard()[cords[0] -i][cords[1]] = '1';
+            for(int i=1; i<= towerSize; i++){
+                currentConfig.getBoard()[cords[0] - i][cords[1]] = '1';
             }
-            currentConfig.getBoard()[cords[0] + 1][cords[1]] = '0';
+            currentConfig.getBoard()[cords[0]][cords[1]] = '0';
+            cords[0] -= 1;
             currentConfig.setCurrentPos(cords);
         }else if(direction == "w" && canTip(cords, direction)){
-            for(int i=0; i<= towerSize; i++){
+            for(int i=1; i<= towerSize; i++){
                 currentConfig.getBoard()[cords[0]][cords[1] - i] = '1';
             }
-            currentConfig.getBoard()[cords[0]][cords[1] + 1] = '0';
+            currentConfig.getBoard()[cords[0]][cords[1]] = '0';
+            cords[1] -= 1;
             currentConfig.setCurrentPos(cords);
         }else if(direction == "s" && canTip(cords, direction)){
-            for(int i=0; i<= towerSize; i++){
+            for(int i=1; i<= towerSize; i++){
                 currentConfig.getBoard()[cords[0] + i][cords[1]] = '1';
             }
-            currentConfig.getBoard()[cords[0] - 1][cords[1]] = '0';
+            currentConfig.getBoard()[cords[0]][cords[1]] = '0';
+            cords[0] += 1;
             currentConfig.setCurrentPos(cords);
         }else if( direction == "e" && canTip(cords, direction)){
-            for(int i=0; i<= towerSize; i++){
+            for(int i=1; i<= towerSize; i++){
                 currentConfig.getBoard()[cords[0]][cords[1] + i] = '1';
             }
-            currentConfig.getBoard()[cords[0]][cords[1] - 1] = '0';
+            currentConfig.getBoard()[cords[0]][cords[1]] = '0';
+            cords[1] += 1;
             currentConfig.setCurrentPos(cords);
         }else{
             System.out.println("Please Enter a Valid Move");
@@ -161,25 +219,25 @@ public class TipOverModel {
     public boolean canTip(int[] cords, String direction){
         int towerSize = Integer.parseInt(String.valueOf(currentConfig.getBoard()[currentConfig.getCurrentPos()[0]][currentConfig.getCurrentPos()[1]]));
         if(direction == "n"){
-            for(int i=0; i< towerSize; i++){
+            for(int i=1; i<= towerSize; i++){
                 if(currentConfig.getBoard()[cords[0] - i][cords[1]] != '0' || cords[0] - i <0){
                     return false;
                 }
             }
         }else if(direction == "w"){
-            for(int i=0; i< towerSize; i++){
+            for(int i=1; i<= towerSize; i++){
                 if(currentConfig.getBoard()[cords[0]][cords[1] - i] != '0' || cords[1] - i <0){
                     return false;
                 }
             }
         }else if(direction == "s"){
-            for(int i=0; i< towerSize; i++){
+            for(int i=1; i<= towerSize; i++){
                 if(currentConfig.getBoard()[cords[0] + i][cords[1]] != '0' || cords[0] + i >= currentConfig.getNumRows()){
                     return false;
                 }
             }
         }else if( direction == "e"){
-            for(int i=0; i< towerSize; i++){
+            for(int i=1; i<= towerSize; i++){
                 if(currentConfig.getBoard()[cords[0]][cords[1] + i] != '0' || cords[1] + i >= currentConfig.getNumCols()){
                     return false;
                 }
@@ -195,6 +253,7 @@ public class TipOverModel {
         return false;
     }
 
+    /* End of move functions */
 
     public boolean configIsSolution(){
         return this.currentConfig.isSolution();

@@ -306,7 +306,7 @@ public class TipOverConfig implements Configuration {
         }
         output += "\n    ";
 
-        int numUnderscores = numRows * 3;
+        int numUnderscores = numCols * 3;
         for(int i=0;i<numUnderscores;i++){
             output += "_";
         }
