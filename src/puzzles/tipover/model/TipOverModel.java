@@ -53,6 +53,149 @@ public class TipOverModel {
         this.currentConfig.setBoard(that.getBoard());
     }
 
+    public void move(String direction){
+        if(direction.startsWith("n")){
+            int[] updatedCords = new int[2];
+            updatedCords[0] = -1;
+            updatedCords[1] =  0;
+            //Checking to see if the tower needs to be tipped
+            int[] valCords = new int[2];
+            valCords[0] = currentConfig.getCurrentPos()[0] + updatedCords[0];
+            valCords[1] = currentConfig.getCurrentPos()[1] + updatedCords[1];
+            if(currentConfig.getBoard()[valCords[0]][valCords[1]] == '0' &&
+                    Integer.parseInt(String.valueOf(currentConfig.getBoard()[currentConfig.getCurrentPos()[0]][currentConfig.getCurrentPos()[1]])) > 1){
+                moveFunctionTip(valCords, "n");
+            }else {
+                moveFunction(updatedCords);
+            }
+        }else if(direction.startsWith("w")){
+            int[] updatedCords = new int[2];
+            updatedCords[0] = 0;
+            updatedCords[1] = -1;
+
+            //Checking to see if the tower needs to be tipped
+            int[] valCords = new int[2];
+            valCords[0] = currentConfig.getCurrentPos()[0] + updatedCords[0];
+            valCords[1] = currentConfig.getCurrentPos()[1] + updatedCords[1];
+            if(currentConfig.getBoard()[valCords[0]][valCords[1]] == '0' &&
+                    Integer.parseInt(String.valueOf(currentConfig.getBoard()[currentConfig.getCurrentPos()[0]][currentConfig.getCurrentPos()[1]])) > 1){
+                moveFunctionTip(valCords, "w");
+            }else {
+                moveFunction(updatedCords);
+            }
+        }else if(direction.startsWith("s")){
+            int[] updatedCords = new int[2];
+            updatedCords[0] = 1;
+            updatedCords[1] = 0;
+
+            //Checking to see if the tower needs to be tipped
+            int[] valCords = new int[2];
+            valCords[0] = currentConfig.getCurrentPos()[0] + updatedCords[0];
+            valCords[1] = currentConfig.getCurrentPos()[1] + updatedCords[1];
+            if(currentConfig.getBoard()[valCords[0]][valCords[1]] == '0' &&
+                    Integer.parseInt(String.valueOf(currentConfig.getBoard()[currentConfig.getCurrentPos()[0]][currentConfig.getCurrentPos()[1]])) > 1){
+                moveFunctionTip(valCords, "s");
+            }else {
+                moveFunction(updatedCords);
+            }
+        }else if(direction.startsWith("e")){
+            int[] updatedCords = new int[2];
+            updatedCords[0] = 0;
+            updatedCords[1] = 1;
+
+            //Checking to see if the tower needs to be tipped
+            int[] valCords = new int[2];
+            valCords[0] = currentConfig.getCurrentPos()[0] + updatedCords[0];
+            valCords[1] = currentConfig.getCurrentPos()[1] + updatedCords[1];
+            if(currentConfig.getBoard()[valCords[0]][valCords[1]] == '0' &&
+                    Integer.parseInt(String.valueOf(currentConfig.getBoard()[currentConfig.getCurrentPos()[0]][currentConfig.getCurrentPos()[1]])) > 1){
+                moveFunctionTip(currentConfig.getCurrentPos(), "e");
+            }else {
+                moveFunction(updatedCords);
+            }
+        }
+    }
+
+    public void moveFunction(int[] cords){
+        int[] newPos = new int[2];
+        newPos[0] = currentConfig.getCurrentPos()[0] + cords[0];
+        newPos[1] = currentConfig.getCurrentPos()[1] + cords[1];
+        if(validMove(newPos)) {
+            currentConfig = new TipOverConfig(currentConfig.getNumRows(), currentConfig.getNumCols(), currentConfig.getStartCords(), currentConfig.getGoalCords(), newPos, currentConfig.getBoard());
+        }else{
+            System.out.println("Please Enter a Valid Move");
+        }
+    }
+
+    public void moveFunctionTip(int[] cords, String direction){
+        int towerSize = Integer.parseInt(String.valueOf(currentConfig.getBoard()[currentConfig.getCurrentPos()[0]][currentConfig.getCurrentPos()[1]]));
+        if(direction == "n" && canTip(cords, direction)){
+            for(int i=0; i<= towerSize; i++){
+                currentConfig.getBoard()[cords[0] -i][cords[1]] = '1';
+            }
+            currentConfig.getBoard()[cords[0] + 1][cords[1]] = '0';
+            currentConfig.setCurrentPos(cords);
+        }else if(direction == "w" && canTip(cords, direction)){
+            for(int i=0; i<= towerSize; i++){
+                currentConfig.getBoard()[cords[0]][cords[1] - i] = '1';
+            }
+            currentConfig.getBoard()[cords[0]][cords[1] + 1] = '0';
+            currentConfig.setCurrentPos(cords);
+        }else if(direction == "s" && canTip(cords, direction)){
+            for(int i=0; i<= towerSize; i++){
+                currentConfig.getBoard()[cords[0] + i][cords[1]] = '1';
+            }
+            currentConfig.getBoard()[cords[0] - 1][cords[1]] = '0';
+            currentConfig.setCurrentPos(cords);
+        }else if( direction == "e" && canTip(cords, direction)){
+            for(int i=0; i<= towerSize; i++){
+                currentConfig.getBoard()[cords[0]][cords[1] + i] = '1';
+            }
+            currentConfig.getBoard()[cords[0]][cords[1] - 1] = '0';
+            currentConfig.setCurrentPos(cords);
+        }else{
+            System.out.println("Please Enter a Valid Move");
+        }
+    }
+
+    public boolean canTip(int[] cords, String direction){
+        int towerSize = Integer.parseInt(String.valueOf(currentConfig.getBoard()[currentConfig.getCurrentPos()[0]][currentConfig.getCurrentPos()[1]]));
+        if(direction == "n"){
+            for(int i=0; i< towerSize; i++){
+                if(currentConfig.getBoard()[cords[0] - i][cords[1]] != '0' || cords[0] - i <0){
+                    return false;
+                }
+            }
+        }else if(direction == "w"){
+            for(int i=0; i< towerSize; i++){
+                if(currentConfig.getBoard()[cords[0]][cords[1] - i] != '0' || cords[1] - i <0){
+                    return false;
+                }
+            }
+        }else if(direction == "s"){
+            for(int i=0; i< towerSize; i++){
+                if(currentConfig.getBoard()[cords[0] + i][cords[1]] != '0' || cords[0] + i >= currentConfig.getNumRows()){
+                    return false;
+                }
+            }
+        }else if( direction == "e"){
+            for(int i=0; i< towerSize; i++){
+                if(currentConfig.getBoard()[cords[0]][cords[1] + i] != '0' || cords[1] + i >= currentConfig.getNumCols()){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public boolean validMove(int[] loc){
+        if(loc[0] < currentConfig.getNumRows() && loc[0] >=0 && loc[1] < currentConfig.getNumCols() && loc[0] >= 0 && currentConfig.getBoard()[loc[0]][loc[1]] != '0'){
+            return true;
+        }
+        return false;
+    }
+
+
     public boolean configIsSolution(){
         return this.currentConfig.isSolution();
     }

@@ -52,7 +52,8 @@ public class TipOverPTUI implements Observer<TipOverModel, Object> {
                 }
             }else if(words.length > 0 && words[0].startsWith("m")){
                 String direction = words[1];
-                //this.model.move(direction);
+                this.model.move(direction);
+                update(this.model, null);
             }
         }
     }
@@ -61,6 +62,7 @@ public class TipOverPTUI implements Observer<TipOverModel, Object> {
         System.out.println(o);
         if(o.configIsSolution()){
             System.out.println("You Win!");
+            System.exit(1);
         }
     }
 
