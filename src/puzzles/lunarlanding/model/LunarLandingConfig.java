@@ -37,7 +37,9 @@ public class LunarLandingConfig implements Configuration {
     }
 
     public ArrayList<Configuration> getNeighbors(){
-
+        ArrayList<Configuration> neighbors = new ArrayList<>();
+        neighbors.add(new LunarLandingConfig(0, 0, new int[]{0, 0}, new int[]{0, 0}, this.board));
+        return neighbors;
     }
 
     public ArrayList<Integer> getState(){
@@ -106,14 +108,14 @@ public class LunarLandingConfig implements Configuration {
             for(int j=0; j<numCols; j++){
                 char toAdd = board[i][j];
                 if(toAdd == '0'){
-                    output += "  _";
-                }else if(i == landerCoords[0] && j == landerCoords[1]){
-                    if(toAdd == '0'){
+                    if(i == landerCoords[0] && j == landerCoords[1]){
                         output += "  !";
                     }
-                    else{
-                        output += " !" + toAdd;
+                    else {
+                        output += "  _";
                     }
+                }else if(i == landerCoords[0] && j == landerCoords[1]){
+                        output += " !" + toAdd;
                 }else{
                     output += "  " + toAdd;
                 }
