@@ -35,6 +35,10 @@ public class TipOverModel {
      *   method works with, and returns, objects of type Configuration.
      */
 
+    public TipOverConfig getCurrentConfig(){
+        return this.currentConfig;
+    }
+
     public TipOverModel(TipOverConfig tipOver, TipOverConfig copy){
         this.observers = new LinkedList<>();
         this.currentConfig = tipOver;

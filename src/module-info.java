@@ -7,6 +7,8 @@
  */
 module BFSPuzzles {
     requires transitive javafx.controls;
+    requires java.desktop;
+    requires java.logging;
     exports puzzles.tipover.gui;
     exports puzzles.lunarlanding.gui;
 }

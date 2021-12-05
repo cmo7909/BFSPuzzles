@@ -7,6 +7,7 @@ import util.Observer;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Locale;
 import java.util.Scanner;
 
 /**
@@ -37,6 +38,7 @@ public class TipOverPTUI implements Observer<TipOverModel, Object> {
         for( ; ; ){
             System.out.print("game command: ");
             String line = in.nextLine();
+            line.toLowerCase(Locale.ROOT);
             String[] words = line.split("\\s+");
             if(words.length == 1) {
                 if (words[0].startsWith("q")) {
