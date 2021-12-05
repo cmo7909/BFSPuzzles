@@ -131,6 +131,7 @@ public class TipOverGUI extends Application
 
         Button reload = new Button("Reload");
         reload.setOnAction(actionEvent -> {
+            topLabel.setText(" ");
             gameModel.reload(copyConfig);
             update(gameModel, null);
         });
@@ -138,7 +139,10 @@ public class TipOverGUI extends Application
 
         Button hint = new Button("Hint");
         hint.setOnAction(actionEvent -> {
-            gameModel.hint();
+            topLabel.setText(" ");
+            if(!gameModel.hint()){
+                topLabel.setText("Hint Cannot find a solution,\nplease press reload");
+            }
             update(gameModel, null);
         });
         buttonsList.add(hint);

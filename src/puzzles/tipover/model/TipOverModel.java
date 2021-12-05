@@ -78,16 +78,20 @@ public class TipOverModel {
         this.currentConfig.setBoard(that.getBoard());
     }
 
-    public void hint(){
-        ArrayList<Configuration> movableNeighbors = currentConfig.getSolutionSteps();
-        for(int i=0; i<movableNeighbors.size() - 1; i++){
-            TipOverConfig that = (TipOverConfig) movableNeighbors.get(i);
-            if(that.getCurrentPos()[0] == currentConfig.getCurrentPos()[0] && that.getCurrentPos()[1] == currentConfig.getCurrentPos()[1]){
-                currentConfig = (TipOverConfig) movableNeighbors.get(i + 1);
-                break;
+    public boolean hint(){
+        try {
+            ArrayList<Configuration> movableNeighbors = currentConfig.getSolutionSteps();
+            for (int i = 0; i < movableNeighbors.size() - 1; i++) {
+                TipOverConfig that = (TipOverConfig) movableNeighbors.get(i);
+                if (that.getCurrentPos()[0] == currentConfig.getCurrentPos()[0] && that.getCurrentPos()[1] == currentConfig.getCurrentPos()[1]) {
+                    currentConfig = (TipOverConfig) movableNeighbors.get(i + 1);
+                    break;
+                }
             }
+        }catch (NullPointerException n){
+            return false;
         }
-
+        return true;
     }
 
     /*Functions for moving based on user input */
