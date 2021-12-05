@@ -38,8 +38,64 @@ public class LunarLandingConfig implements Configuration {
 
     public ArrayList<Configuration> getNeighbors(){
         ArrayList<Configuration> neighbors = new ArrayList<>();
-        neighbors.add(new LunarLandingConfig(0, 0, new int[]{0, 0}, new int[]{0, 0}, this.board));
+        for(int row = 0; row < board.length; row++){
+            for(int col = 0; col < board[0].length; col++){
+                if(board[row][col] != '0'){
+                    if(board[row][col] != 'E'){
+                        ArrayList<String> moveDirections = getMoveDirections(row, col);
+                        for (int i = 0; i < moveDirections.size(); i++) {
+                            char[][] updatedBoard = updateBoard(board, row, col, moveDirections.get(i));
+                            neighbors.add(new LunarLandingConfig(numRows, numCols, landerCoords, explorerCoords, updatedBoard));
+                        }
+                    } else { //current figure is the explorer
+                        ArrayList<String> moveDirections = getMoveDirections(row, col);
+                        for (int i = 0; i < moveDirections.size(); i++) {
+                            char[][] updatedBoard = updateBoard(board, row, col, moveDirections.get(i));
+                            //TODO find new coords of explorer and pass in to config constructor with updatedboard
+//                            neighbors.add(new LunarLandingConfig(numRows, numCols, landerCoords, ))
+                        }
+                    }
+                }
+            }
+        }
         return neighbors;
+    }
+
+    private char[][] updateBoard(char[][] toUpdate, int row, int col, String direction){
+        return new char[][]{}; //TODO write method
+    }
+
+    private ArrayList<String> getMoveDirections(int row, int col){
+        ArrayList<String> directions = new ArrayList<>();
+        //Check North
+        for(int i = 1; i <= row; i++){
+            if(board[row-i][col] != '0'){
+                directions.add("N");
+                break;
+            }
+        }
+        //Check South
+        for(int i = 1; i < numRows; i++){
+            if(board[row+i][col] != '0'){
+                directions.add("S");
+                break;
+            }
+        }
+        //Check West
+        for(int i = 1; i <= col; i++){
+            if(board[row][col-i] != '0'){
+                directions.add("W");
+                break;
+            }
+        }
+        //Check East
+        for(int i = 1; i < numCols; i++){
+            if(board[row][col+i] != '0'){
+                directions.add("E");
+                break;
+            }
+        }
+        return directions;
     }
 
     public ArrayList<Integer> getState(){
@@ -74,7 +130,7 @@ public class LunarLandingConfig implements Configuration {
 
     @Override
     public int hashCode() {
-        return Objects.hash(numRows, numCols, landerCoords, explorerCoords, board);
+        return Objects.hashCode(board);
     }
 
     @Override
