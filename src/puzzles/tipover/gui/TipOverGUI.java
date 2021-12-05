@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Scanner;
 
 /**
- * DESCRIPTION
+ * The graphical user interface to display a graphical version of the game
  * @author Craig O'Connor
  * November 2021
  */
@@ -37,6 +37,10 @@ public class TipOverGUI extends Application
     private GridPane gameGrid;
     private Desktop desktop = Desktop.getDesktop();
 
+    /**
+     * Gets the tipover objects data in order to create the objects necessary for the GUI
+     * @throws Exception
+     */
     @Override
     public void init() throws Exception{
         List<String> args = getParameters().getRaw();
@@ -72,11 +76,19 @@ public class TipOverGUI extends Application
         }
     }
 
+    /**
+     * Configures the file chooser with the desired beginning directory
+     * @param fileChooser the file chooser object
+     */
      private static void configureFileChooser(final FileChooser fileChooser){
         fileChooser.setTitle("Choose a text file to load");
         fileChooser.setInitialDirectory(new File("data/tipover"));
      }
 
+    /**
+     * The setup method for the gui and its components
+     * @param stage the stage to add the GUI components to
+     */
     @Override
     public void start(Stage stage) {
         final FileChooser fileChooser = new FileChooser();
@@ -112,6 +124,10 @@ public class TipOverGUI extends Application
 
         Button load = new Button("Load");
         load.setOnAction(new EventHandler<ActionEvent>() {
+            /**
+             * Handles what happens after the user selects a file
+             * @param e the event occurring
+             */
             @Override
             public void handle(final ActionEvent e) {
                 configureFileChooser(fileChooser);
@@ -227,6 +243,11 @@ public class TipOverGUI extends Application
         stage.show();
     }
 
+    /**
+     * Method that updates the display after an action has occurred
+     * @param tipOverModel the tipover model to update
+     * @param o always null
+     */
     @Override
     public void update(TipOverModel tipOverModel, Object o) {
 
@@ -246,10 +267,20 @@ public class TipOverGUI extends Application
         }
     }
 
+    /**
+     * Main method to start the process
+     * @param args the file to get the data from in init()
+     * @throws FileNotFoundException
+     */
     public static void main(String[] args) throws FileNotFoundException {
             Application.launch(args);
     }
 
+    /**
+     * Once the reload button is pressed init cannot be called again so to work around this
+     * the method is used to create the objects again then just call start at the end.
+     * @param args the filename to use to get data from
+     */
     public void forReload(String[] args){
         String fileName = "data/tipover/" + args[0];
         try (Scanner in = new Scanner(new File(fileName))) {

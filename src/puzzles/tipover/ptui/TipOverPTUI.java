@@ -11,7 +11,7 @@ import java.util.Locale;
 import java.util.Scanner;
 
 /**
- * DESCRIPTION
+ * Plain Text User Interface for playing the Tipover Game
  * @author Craig O'Connor
  * November 2021
  */
@@ -33,6 +33,9 @@ public class TipOverPTUI implements Observer<TipOverModel, Object> {
         initializeView();
     }
 
+    /**
+     * Method that checks what to do based on the command that the user enters
+     */
     private void run(){
         Scanner in = new Scanner(System.in);
         for( ; ; ){
@@ -61,10 +64,17 @@ public class TipOverPTUI implements Observer<TipOverModel, Object> {
                 String direction = words[1];
                 this.model.move(direction);
                 update(this.model, null);
+            }else{
+                displayHelp();
             }
         }
     }
 
+    /**
+     * Checks if the current position is the solution and updates the 2D array of the board
+     * @param o the model to update
+     * @param arg always null
+     */
     public void update(TipOverModel o, Object arg){
         System.out.println(o);
         if(o.configIsSolution()){
@@ -73,11 +83,17 @@ public class TipOverPTUI implements Observer<TipOverModel, Object> {
         }
     }
 
+    /**
+     * Initialize view method adds an observer
+     */
     public void initializeView(){
         this.model.addObserver(this);
         update(this.model, null);
     }
 
+    /**
+     * Method for displaying help
+     */
     public void displayHelp(){
         System.out.println("* -- current position of tipper");
         System.out.println("! -- goal position");
@@ -92,6 +108,10 @@ public class TipOverPTUI implements Observer<TipOverModel, Object> {
         System.out.println("q(uit) -- terminates the program");
     }
 
+    /**
+     * The main method that creates the tipover objects based on the file given
+     * @param args the file name to get the data from
+     */
     public static void main( String[] args ) {
         String fileName = args[0];
         try(Scanner in = new Scanner(new File(fileName))) {

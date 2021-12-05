@@ -11,7 +11,7 @@ import solver.Configuration;
 import util.Observer;
 
 /**
- * DESCRIPTION
+ * Model used by the GUI and the PTUI to give functionality to the commands
  * @author Craig O'Connor
  * November 2021
  */
@@ -35,20 +35,37 @@ public class TipOverModel {
      *   method works with, and returns, objects of type Configuration.
      */
 
+    /**
+     * Getter for the current config
+     * @return the config that is found
+     */
     public TipOverConfig getCurrentConfig(){
         return this.currentConfig;
     }
 
+    /**
+     * Constructior for a tipover model
+     * @param tipOver the first config that will be modified
+     * @param copy the same as tipover but is not modified and used to reset tipover
+     */
     public TipOverModel(TipOverConfig tipOver, TipOverConfig copy){
         this.observers = new LinkedList<>();
         this.currentConfig = tipOver;
         this.copyConfig = copy;
         this.reload(copyConfig);
     }
+
+    /**
+     * Function to add observers
+     * @param obs object added
+     */
     public void addObserver(Observer<TipOverModel, Object> obs){
         this.observers.add(obs);
     }
 
+    /**
+     * Method used to load a new File that the user wants
+     */
     public void load(){
         Scanner in = new Scanner(System.in);
         System.out.println("Type a new file to load");
@@ -69,6 +86,10 @@ public class TipOverModel {
         TipOverPTUI.main(arg);
     }
 
+    /**
+     * Used in the PTUI to reset the board
+     * @param that the tipover config to reset the board with
+     */
     public void reload(TipOverConfig that){
         this.currentConfig.setNumRows(that.getNumRows());
         this.currentConfig.setNumCols(that.getNumCols());
@@ -78,6 +99,11 @@ public class TipOverModel {
         this.currentConfig.setBoard(that.getBoard());
     }
 
+    /**
+     * Used to get one step closer to the goal position from the current position
+     * @return boolean value used to prevent an error when the user has made a move that doesnt
+     * allow the puzzle to be solved from that position
+     */
     public boolean hint(){
         try {
             ArrayList<Configuration> movableNeighbors = currentConfig.getSolutionSteps();
@@ -89,13 +115,19 @@ public class TipOverModel {
                 }
             }
         }catch (NullPointerException n){
+            System.out.println("The puzzle cannot be solved from this position\n please reload");
             return false;
+
         }
         return true;
     }
 
     /*Functions for moving based on user input */
 
+    /**
+     * Moves the tipper in the direvtion specified if possible
+     * @param direction the direction to try to move in
+     */
     public void move(String direction){
         try{
         if(direction.startsWith("n")){
@@ -175,6 +207,10 @@ public class TipOverModel {
         }
     }
 
+    /**
+     * Actually moves the tipper(used in move)
+     * @param cords the current position of the tipper
+     */
     public void moveFunction(int[] cords){
         int[] newPos = new int[2];
         newPos[0] = currentConfig.getCurrentPos()[0] + cords[0];
@@ -186,6 +222,11 @@ public class TipOverModel {
         }
     }
 
+    /**
+     * The move function called if the tipper cannot move in a specific direction but can tip a tower
+     * @param cords the current position of the tipper
+     * @param direction the direction to tip
+     */
     public void moveFunctionTip(int[] cords, String direction){
         int towerSize = Integer.parseInt(String.valueOf(currentConfig.getBoard()[currentConfig.getCurrentPos()[0]][currentConfig.getCurrentPos()[1]]));
         if(direction == "n" && canTip(cords, direction)){
@@ -221,6 +262,12 @@ public class TipOverModel {
         }
     }
 
+    /**
+     * Checks to see if the tower can be tipper
+     * @param cords the current position
+     * @param direction the direction to tip in
+     * @return true or false if the tipped tower will fit
+     */
     public boolean canTip(int[] cords, String direction){
         int towerSize = Integer.parseInt(String.valueOf(currentConfig.getBoard()[currentConfig.getCurrentPos()[0]][currentConfig.getCurrentPos()[1]]));
         if(direction == "n"){
@@ -251,6 +298,11 @@ public class TipOverModel {
         return true;
     }
 
+    /**
+     * Checks to see if the movment in a direction is withing the bounds of the configs 2D array
+     * @param loc the position that we are checking
+     * @return true or false if the position is valid or not
+     */
     public boolean validMove(int[] loc){
         if(loc[0] < currentConfig.getNumRows() && loc[0] >=0 && loc[1] < currentConfig.getNumCols() && loc[1] >= 0 && currentConfig.getBoard()[loc[0]][loc[1]] != '0'){
             return true;
@@ -260,10 +312,18 @@ public class TipOverModel {
 
     /* End of move functions */
 
+    /**
+     * Checks if the current configuration is the solution
+     * @return true or false if the config is the solution
+     */
     public boolean configIsSolution(){
         return this.currentConfig.isSolution();
     }
 
+    /**
+     * Calls the tipoverConfigs toString
+     * @return a string representation of the tipoverConfigs data
+     */
     public String toString(){
         return this.currentConfig.toString();
     }

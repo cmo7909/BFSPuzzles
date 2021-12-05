@@ -13,7 +13,7 @@ import java.util.Scanner;
 import java.util.*;
 
 /**
- * DESCRIPTION
+ * The configuration for the tipover puzzle, handles the functionality and the creation
  * @author Craig O'Connor
  * November 2021
  */
@@ -48,42 +48,101 @@ public class TipOverConfig implements Configuration {
         }
     }
 
+    /**
+     * Setter for numRows
+     * @param val int value to set numRows
+     */
     public void setNumRows(int val){
         this.numRows = val;
     }
+
+    /**
+     * Getter for the number of rows
+     * @return an int which is the number of rows
+     */
     public int getNumRows(){
         return this.numRows;
     }
+
+    /**
+     * Setter for numCols
+     * @param val int value to set numCols
+     */
     public void setNumCols(int val){
         this.numCols = val;
     }
+
+    /**
+     * Getter for the number of cols
+     * @return and in which is the number of cols
+     */
     public int getNumCols(){
         return this.numCols;
     }
+
+    /**
+     * Setter for the starting cords
+     * @param pos and int array with the starting [row,col] to set to
+     */
     public void setStartCords(int[] pos){
         this.startCords[0] = pos[0];
-        this.startCords[1] = startCords[1];
+        this.startCords[1] = pos[1];
     }
+
+    /**
+     * Getter for the starting position
+     * @return the staring position of the tipper
+     */
     public int[] getStartCords(){
         return this.startCords;
     }
+
+    /**
+     * Getter for the goal cords
+     * @return int[] containing the goals row col position
+     */
     public int[] getGoalCords(){
         return this.goalCords;
     }
+
+    /**
+     * Setter for the goal cords
+     * @param pos an int[] which is used to set the goal cords [row,col]
+     */
     public void setGoalCords(int[] pos){
         this.goalCords[0] = pos[0];
         this.goalCords[1] = pos[1];
     }
+
+    /**
+     * Setter for the current position
+     * @param pos int[] the new position to set the current pos to [row,col]
+     */
     public void setCurrentPos(int[] pos){
         this.currentPos[0] = pos[0];
         this.currentPos[1] = pos[1];
     }
+
+    /**
+     * Getter for the current position
+     * @return the current position of the tipper [row,col]
+     */
     public int[] getCurrentPos(){
         return this.currentPos;
     }
+
+    /**
+     * Getter for the game board
+     * @return a 2 dimensional array of the board and its contents
+     */
     public char[][] getBoard(){
         return this.board;
     }
+
+    /**
+     * Setter to update the board
+     * @param otherBoard the other board to update the current board with
+     */
     public void setBoard(char[][] otherBoard){
         for(int i=0; i<numRows; i++){
             for(int j=0; j<numCols;j++){
@@ -91,6 +150,11 @@ public class TipOverConfig implements Configuration {
             }
         }
     }
+
+    /**
+     * Method used to get the valid neighbors of the tippers current position
+     * @return an arraylist of valid configurations
+     */
     public ArrayList<Configuration> getNeighbors() {
         ArrayList<Configuration> neighbors = new ArrayList<>();
         //checking north
@@ -154,6 +218,11 @@ public class TipOverConfig implements Configuration {
         return neighbors;
     }
 
+    /**
+     * Checks if the tipper can tip over a tower and not go out of bounds or hit another tower
+     * @param check the configuration to check
+     * @return and arraylist of cardinal directions the current position can tip in
+     */
     public ArrayList<String> tipDirections(TipOverConfig check){
         ArrayList<String> directions = new ArrayList<>();
         if(check.currentPos[0] < numRows && check.currentPos[0] >= 0 && check.currentPos[1] < numCols && check.currentPos[1] >= 0) {
@@ -209,6 +278,13 @@ public class TipOverConfig implements Configuration {
         return directions;
     }
 
+    /**
+     * This method updates the board by tipping the tower in the given direction
+     * @param toUpdate the board to update
+     * @param direction the direction to tip in
+     * @param amountToReplace the size of the tower - which is the amount of "1"'s we need to place
+     * @return a new tipoverConfig with the changes made
+     */
     public TipOverConfig updateBoard(TipOverConfig toUpdate, String direction, int amountToReplace){
         TipOverConfig copy = new TipOverConfig(this.numRows, this.numCols, this.startCords, this.goalCords, this.currentPos, this.board);
         if(direction == "N"){
@@ -239,6 +315,11 @@ public class TipOverConfig implements Configuration {
         return copy;
     }
 
+    /**
+     * Checks to see if a string value is numeric
+     * @param str the string to check
+     * @return true or false if the string is numeric or not
+     */
     public boolean isNumeric(String str) {
         if (str == null) {
             return false;
@@ -259,10 +340,19 @@ public class TipOverConfig implements Configuration {
         return Solver.solverBFS(this);
     }
 
+    /**
+     * Checks to see if the this config is at the solution
+     * @return true or false if the config is the solution
+     */
     public boolean isSolution(){
         return this.currentPos[0] == this.goalCords[0] && this.currentPos[1] == this.goalCords[1];
     }
 
+    /**
+     * Overridden equals method to compare Tipover Configs
+     * @param o the other object to compare to
+     * @return boolean true or false if the two objects are equal
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -272,6 +362,12 @@ public class TipOverConfig implements Configuration {
                     && this.hashCode() == that.hashCode();
     }
 
+    /**
+     * Checker used in the equals method to compare two 2D arrays
+     * @param firstGrid the first 2D array to compare
+     * @param secondGrid the second 2D array to compare
+     * @return true or false if the 2D arrays are the same or not
+     */
     public boolean sameGrid(char[][] firstGrid, char[][]secondGrid){
         for(int i=0;i<numRows;i++){
             for(int j=0;j<numCols;j++){
@@ -283,6 +379,10 @@ public class TipOverConfig implements Configuration {
         return true;
     }
 
+    /**
+     * Hash code method used by the equals method to compare Tipover objects
+     * @return an integer value which is the hashcode of the Tipover config
+     */
     @Override
     public int hashCode() {
         int start = startCords[0] + startCords[1];
@@ -292,6 +392,10 @@ public class TipOverConfig implements Configuration {
         return (start * current * goal) - rowCol;
     }
 
+    /**
+     * Gets the current state of the config
+     * @return an arraylist of integer containing the current position
+     */
     public ArrayList<Integer> getState() {
         ArrayList<Integer> currentState = new ArrayList<>();
         currentState.add(currentPos[0]);
@@ -299,6 +403,11 @@ public class TipOverConfig implements Configuration {
         return currentState;
     }
 
+    /**
+     * Overridden to string
+     * @return a string representation of the Tipover configs data
+     */
+    @Override
     public String toString(){
         String output = "   ";
 
