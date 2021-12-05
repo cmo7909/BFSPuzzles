@@ -248,7 +248,7 @@ public class TipOverModel {
     }
 
     public boolean validMove(int[] loc){
-        if(loc[0] < currentConfig.getNumRows() && loc[0] >=0 && loc[1] < currentConfig.getNumCols() && loc[0] >= 0 && currentConfig.getBoard()[loc[0]][loc[1]] != '0'){
+        if(loc[0] < currentConfig.getNumRows() && loc[0] >=0 && loc[1] < currentConfig.getNumCols() && loc[1] >= 0 && currentConfig.getBoard()[loc[0]][loc[1]] != '0'){
             return true;
         }
         return false;
