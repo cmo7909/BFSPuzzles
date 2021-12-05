@@ -51,8 +51,16 @@ public class LunarLandingConfig implements Configuration {
                         ArrayList<String> moveDirections = getMoveDirections(row, col);
                         for (int i = 0; i < moveDirections.size(); i++) {
                             char[][] updatedBoard = updateBoard(board, row, col, moveDirections.get(i));
-                            //TODO find new coords of explorer and pass in to config constructor with updatedboard
-//                            neighbors.add(new LunarLandingConfig(numRows, numCols, landerCoords, ))
+                            //find new coordinates of explorer
+                            for(int x = 0; x < updatedBoard.length; x++){
+                                for(int y = 0; y < updatedBoard[0].length; y++){
+                                    if(updatedBoard[x][y] == 'E'){
+                                        explorerCoords[0] = x;
+                                        explorerCoords[1] = y;
+                                    }
+                                }
+                            }
+                            neighbors.add(new LunarLandingConfig(numRows, numCols, landerCoords, explorerCoords, updatedBoard));
                         }
                     }
                 }
@@ -62,10 +70,52 @@ public class LunarLandingConfig implements Configuration {
     }
 
     private char[][] updateBoard(char[][] toUpdate, int row, int col, String direction){
-        return new char[][]{}; //TODO write method
+        //TODO Debug
+        char[][] returnBoard = new char[toUpdate.length][toUpdate[0].length];
+        for(int i = 0; i < returnBoard.length; i++){
+            for(int j = 0; j < returnBoard[0].length; j++){
+                returnBoard[i][j] = toUpdate[i][j];
+            }
+        }
+        char toMove = returnBoard[row][col];
+        returnBoard[row][col] = 0;
+        if(direction.equals("N")){
+            for(int i = 1; i <= row; i++){
+                if(board[row-i][col] != '0'){
+                    returnBoard[row-i+1][col] = toMove;
+                    break;
+                }
+            }
+        }
+        if(direction.equals("S")){
+            for(int i = 1; i < numRows; i++){
+                if(board[row+i][col] != '0'){
+                    returnBoard[row+i-1][col] = toMove;
+                    break;
+                }
+            }
+        }
+        if(direction.equals("W")){
+            for(int i = 1; i <= col; i++){
+                if(board[row][col-i] != '0'){
+                    returnBoard[row][col-i+1] = toMove;
+                    break;
+                }
+            }
+        }
+        if(direction.equals("E")){
+            for(int i = 1; i < numCols; i++){
+                if(board[row][col+i] != '0'){
+                    returnBoard[row][col+i-1] = toMove;
+                    break;
+                }
+            }
+        }
+        return returnBoard;
     }
 
     private ArrayList<String> getMoveDirections(int row, int col){
+        //TODO Debug
         ArrayList<String> directions = new ArrayList<>();
         //Check North
         for(int i = 1; i <= row; i++){
