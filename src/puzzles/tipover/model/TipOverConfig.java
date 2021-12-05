@@ -265,14 +265,11 @@ public class TipOverConfig implements Configuration {
 
     @Override
     public boolean equals(Object o) {
-        if(o instanceof TipOverConfig) {
-            TipOverConfig that = (TipOverConfig) o;
-            return /*numRows == that.numRows && numCols == that.numCols &&*/ startCords[0] == that.startCords[0]
-                    && startCords[1] == that.startCords[1] && goalCords[0] == that.goalCords[0] && goalCords[1] == that.goalCords[1]
-                    && currentPos[0] == that.currentPos[0] && currentPos[1] == that.currentPos[1] && sameGrid(this.board, that.board)
-                    /*&& this.hashCode() == that.hashCode()*/;
-        }
-        return false;
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TipOverConfig that = (TipOverConfig) o;
+            return currentPos[0] == that.currentPos[0] && currentPos[1] == that.currentPos[1] && sameGrid(this.board, that.board)
+                    && this.hashCode() == that.hashCode();
     }
 
     public boolean sameGrid(char[][] firstGrid, char[][]secondGrid){
@@ -288,7 +285,11 @@ public class TipOverConfig implements Configuration {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(board);
+        int start = startCords[0] + startCords[1];
+        int current = currentPos[0] + currentPos[0];
+        int goal = goalCords[0] + goalCords[1];
+        int rowCol = numCols + numRows;
+        return (start * current * goal) - rowCol;
     }
 
     public ArrayList<Integer> getState() {
