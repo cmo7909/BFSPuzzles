@@ -4,7 +4,7 @@ import java.util.ArrayList;
 /**
  * Configuration abstraction for the solver algorithm
  *
- * @author YOUR NAME HERE
+ * @author Andrew Moulton
  * November 2021
  */
 public interface Configuration {

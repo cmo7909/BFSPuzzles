@@ -13,7 +13,7 @@ import java.io.File;
 
 /**
  * DESCRIPTION
- * @author YOUR NAME HERE
+ * @author Andrew Moulton
  * November 2021
  */
 public class LunarLandingGUI extends Application

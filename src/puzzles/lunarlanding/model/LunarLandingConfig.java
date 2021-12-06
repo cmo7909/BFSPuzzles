@@ -35,6 +35,46 @@ public class LunarLandingConfig implements Configuration {
             }
         }
     }
+    public int getNumRows(){
+        return this.numRows;
+    }
+    public void setNumRows(int val){
+        this.numRows = val;
+    }
+
+    public int getNumCols(){
+        return this.numCols;
+    }
+    public void setNumCols(int val){
+        this.numCols = val;
+    }
+
+    public int[] getLanderCoords(){
+        return this.landerCoords;
+    }
+    public void setLanderCoords(int[] pos){
+        this.landerCoords[0] = pos[0];
+        this.landerCoords[1] = pos[1];
+    }
+
+    public int[] getExplorerCoords(){
+        return this.explorerCoords;
+    }
+    public void setExplorerCoords(int[] pos){
+        this.landerCoords[0] = pos[0];
+        this.landerCoords[1] = pos[1];
+    }
+
+    public char[][] getBoard(){
+        return this.board;
+    }
+    public void setBoard(char[][] otherBoard){
+        for(int i=0; i<numRows; i++){
+            for(int j=0; j<numCols;j++){
+                this.board[i][j] = otherBoard[i][j];
+            }
+        }
+    }
 
     public ArrayList<Configuration> getNeighbors(){
         ArrayList<Configuration> neighbors = new ArrayList<>();
@@ -52,15 +92,16 @@ public class LunarLandingConfig implements Configuration {
                         for (int i = 0; i < moveDirections.size(); i++) {
                             char[][] updatedBoard = updateBoard(board, row, col, moveDirections.get(i));
                             //find new coordinates of explorer
+                            int[] newExplorerCoords = new int[2];
                             for(int x = 0; x < updatedBoard.length; x++){
                                 for(int y = 0; y < updatedBoard[0].length; y++){
                                     if(updatedBoard[x][y] == 'E'){
-                                        explorerCoords[0] = x;
-                                        explorerCoords[1] = y;
+                                        newExplorerCoords[0] = x;
+                                        newExplorerCoords[1] = y;
                                     }
                                 }
                             }
-                            neighbors.add(new LunarLandingConfig(numRows, numCols, landerCoords, explorerCoords, updatedBoard));
+                            neighbors.add(new LunarLandingConfig(numRows, numCols, landerCoords, newExplorerCoords, updatedBoard));
                         }
                     }
                 }

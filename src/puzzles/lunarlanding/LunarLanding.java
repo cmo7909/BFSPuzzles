@@ -35,10 +35,6 @@ public class LunarLanding {
                     gameBoard[i][j] = '0';
                 }
             }
-            String expLine = in.nextLine().trim();
-            String[] expFields = expLine.split("\\s+");
-            int[] explorerCoords = new int[]{Integer.parseInt(expFields[1]), Integer.parseInt(expFields[2])};
-            gameBoard[Integer.parseInt(expFields[1])][Integer.parseInt(expFields[2])] = expFields[0].charAt(0);
             while(in.hasNextLine()){
                 line = in.nextLine().trim();
                 if(line.equals("")){
@@ -46,6 +42,16 @@ public class LunarLanding {
                 }
                 fields = line.split("\\s+");
                 gameBoard[Integer.parseInt(fields[1])][Integer.parseInt(fields[2])] = fields[0].charAt(0);
+            }
+            //find coordinates of explorer
+            int[] explorerCoords = new int[2];
+            for(int x = 0; x < gameBoard.length; x++){
+                for(int y = 0; y < gameBoard[0].length; y++){
+                    if(gameBoard[x][y] == 'E'){
+                        explorerCoords[0] = x;
+                        explorerCoords[1] = y;
+                    }
+                }
             }
 
             LunarLandingConfig toSolve = new LunarLandingConfig(numRows, numCols, landerCoords, explorerCoords, gameBoard);
