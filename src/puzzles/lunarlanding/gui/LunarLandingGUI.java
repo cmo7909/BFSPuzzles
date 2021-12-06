@@ -9,10 +9,24 @@ import javafx.stage.Stage;
 import puzzles.lunarlanding.model.LunarLandingModel;
 import util.Observer;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.control.Label;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.stage.FileChooser;
+import puzzles.lunarlanding.model.LunarLandingConfig;
+import puzzles.lunarlanding.model.LunarLandingModel;
+
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
 
 /**
- * DESCRIPTION
+ * The graphical user interface to display a graphical version of the game
  * @author Andrew Moulton
  * November 2021
  */

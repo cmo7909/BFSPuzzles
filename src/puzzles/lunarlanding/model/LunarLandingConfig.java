@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 /**
- * DESCRIPTION
+ * The configuration for the LunarLanding puzzle, handles the functionality and the creation
  * @author Andrew Moulton
  * November 2021
  */

@@ -10,6 +10,7 @@ import java.util.Scanner;
 import puzzles.lunarlanding.ptui.LunarLandingPTUI;
 import solver.Configuration;
 
+
 /**
  * Model used by the GUI and the PTUI to give functionality to the commands
  * @author Andrew Moulton
@@ -149,7 +150,7 @@ public class LunarLandingModel {
         boolean canGo = currentConfig.getMoveDirections(selectedCoords[0], selectedCoords[1]).contains(direction.toUpperCase());
         if(canGo){
             if(currentConfig.getBoard()[selectedCoords[0]][selectedCoords[1]] == 'E'){
-                currentConfig.setBoard(currentConfig.updateBoard(currentConfig.getBoard(), selectedCoords[0], selectedCoords[1], direction));
+                char[][] newBoard = currentConfig.updateBoard(currentConfig.getBoard(), selectedCoords[0], selectedCoords[1], direction);
                 //find new coordinates of explorer
                 int[] newExplorerCoords = new int[2];
                 for(int x = 0; x < currentConfig.getBoard().length; x++){
@@ -160,9 +161,12 @@ public class LunarLandingModel {
                         }
                     }
                 }
-                currentConfig.setExplorerCoords(newExplorerCoords);
+                currentConfig = new LunarLandingConfig(currentConfig.getNumRows(), currentConfig.getNumCols(),
+                        currentConfig.getLanderCoords(), newExplorerCoords, newBoard);
             }else{
-                currentConfig.setBoard(currentConfig.updateBoard(currentConfig.getBoard(), selectedCoords[0], selectedCoords[1], direction));
+                char[][] newBoard = currentConfig.updateBoard(currentConfig.getBoard(), selectedCoords[0], selectedCoords[1], direction);
+                currentConfig = new LunarLandingConfig(currentConfig.getNumRows(), currentConfig.getNumCols(),
+                        currentConfig.getLanderCoords(), currentConfig.getExplorerCoords(), newBoard);
             }
         }else{
             System.out.println("Invalid go command");
