@@ -97,11 +97,12 @@ public class LunarLandingPTUI implements Observer<LunarLandingModel, Object>{
         System.out.println("! -- current position of lander");
         System.out.println("_ -- empty position");
         System.out.println("any letter other than E -- position of a figure");
+        System.out.println("Valid Commands:");
         System.out.println("l(oad) -- abandon game, and load a new game");
         System.out.println("r(eload) -- reload with the same file");
         System.out.println("c(hoose) row column -- choose which figure moves next (2 arguments)");
         System.out.println("g(o) {n(orth)|s(outh)|e(ast)|w(est)} -- tell chosen figure where to go (1 argument)");
-        System.out.println("h(int) -- moves the tipper a step towards the goal");
+        System.out.println("h(int) -- moves the puzzle one step towards the goal");
         System.out.println("s(how) -- displays the board");
         System.out.println("q(uit) -- terminates the program");
     }
@@ -124,10 +125,6 @@ public class LunarLandingPTUI implements Observer<LunarLandingModel, Object>{
                     gameBoard[i][j] = '0';
                 }
             }
-            String expLine = in.nextLine().trim();
-            String[] expFields = expLine.split("\\s+");
-            int[] explorerCoords = new int[]{Integer.parseInt(expFields[1]), Integer.parseInt(expFields[2])};
-            gameBoard[Integer.parseInt(expFields[1])][Integer.parseInt(expFields[2])] = expFields[0].charAt(0);
             while(in.hasNextLine()){
                 line = in.nextLine().trim();
                 if(line.equals("")){
@@ -135,6 +132,16 @@ public class LunarLandingPTUI implements Observer<LunarLandingModel, Object>{
                 }
                 fields = line.split("\\s+");
                 gameBoard[Integer.parseInt(fields[1])][Integer.parseInt(fields[2])] = fields[0].charAt(0);
+            }
+            //find coordinates of explorer
+            int[] explorerCoords = new int[2];
+            for(int x = 0; x < gameBoard.length; x++){
+                for(int y = 0; y < gameBoard[0].length; y++){
+                    if(gameBoard[x][y] == 'E'){
+                        explorerCoords[0] = x;
+                        explorerCoords[1] = y;
+                    }
+                }
             }
             LunarLandingPTUI ptui = new LunarLandingPTUI(numRows, numCols, landerCoords, explorerCoords, gameBoard);
             ptui.run();

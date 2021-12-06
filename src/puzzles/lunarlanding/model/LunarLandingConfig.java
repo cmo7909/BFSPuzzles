@@ -110,7 +110,7 @@ public class LunarLandingConfig implements Configuration {
         return neighbors;
     }
 
-    private char[][] updateBoard(char[][] toUpdate, int row, int col, String direction){
+    public char[][] updateBoard(char[][] toUpdate, int row, int col, String direction){
         char[][] returnBoard = new char[toUpdate.length][toUpdate[0].length];
         for(int i = 0; i < returnBoard.length; i++){
             for(int j = 0; j < returnBoard[0].length; j++){
@@ -154,7 +154,7 @@ public class LunarLandingConfig implements Configuration {
         return returnBoard;
     }
 
-    private ArrayList<String> getMoveDirections(int row, int col){
+    public ArrayList<String> getMoveDirections(int row, int col){
         ArrayList<String> directions = new ArrayList<>();
         //Check North
         for(int i = 1; i <= row; i++){

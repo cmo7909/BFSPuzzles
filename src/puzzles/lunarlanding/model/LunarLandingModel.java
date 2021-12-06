@@ -23,6 +23,8 @@ public class LunarLandingModel {
 
     private List<Observer<LunarLandingModel, Object>> observers;
 
+    private int[] selectedCoords = new int[2];
+
     /*
      * Code here includes...
      * Additional data variables for anything needed beyond what is in
@@ -114,7 +116,7 @@ public class LunarLandingModel {
                 }
             }
         }catch (NullPointerException n){
-            System.out.println("The puzzle cannot be solved from this position\n please reload");
+            System.out.println("The puzzle cannot be solved from this position\nplease reload");
             return false;
         }
         return true;
@@ -125,199 +127,47 @@ public class LunarLandingModel {
      * @param row the row index of the figure to select
      * @param col the column index of the figure to select
      */
-    public void choose(int row, int col){}
+    public void choose(int row, int col){
+        if(col >= currentConfig.getNumCols()
+        || col < 0
+        || row >= currentConfig.getNumRows()
+        || row < 0
+        || currentConfig.getBoard()[row][col] == '0') {
+            System.out.println("Invalid choose command");
+        }else{
+            selectedCoords[0] = row;
+            selectedCoords[1] = col;
+        }
+    }
 
+    //fix no win message
     /**
      * Moves the selected figure in the direction specified if possible
-     * @param direction the direction to try to move in
+     * @param direction the direction to try to move in (either "N", "E", "S", or "W")
      */
-    public void go(String direction){}
-
-//    /**
-//     * Moves the tipper in the direvtion specified if possible
-//     * @param direction the direction to try to move in
-//     */
-//    public void move(String direction){
-//        try{
-//            if(direction.startsWith("n")){
-//                int[] updatedCords = new int[2];
-//                updatedCords[0] = -1;
-//                updatedCords[1] =  0;
-//                //Checking to see if the tower needs to be tipped
-//                int[] valCords = new int[2];
-//                valCords[0] = currentConfig.getCurrentPos()[0] + updatedCords[0];
-//                valCords[1] = currentConfig.getCurrentPos()[1] + updatedCords[1];
-//                if(currentConfig.getBoard()[valCords[0]][valCords[1]] == '0' &&
-//                        Integer.parseInt(String.valueOf(currentConfig.getBoard()[currentConfig.getCurrentPos()[0]][currentConfig.getCurrentPos()[1]])) > 1){
-//                    moveFunctionTip(currentConfig.getCurrentPos(), "n");
-//                }else {
-//                    try {
-//                        moveFunction(updatedCords);
-//                    }catch(ArrayIndexOutOfBoundsException a){
-//                        System.out.println("Please Enter a Valid Move");
-//                    }
-//                }
-//            }else if(direction.startsWith("w")){
-//                int[] updatedCords = new int[2];
-//                updatedCords[0] = 0;
-//                updatedCords[1] = -1;
-//
-//                //Checking to see if the tower needs to be tipped
-//                int[] valCords = new int[2];
-//                valCords[0] = currentConfig.getCurrentPos()[0] + updatedCords[0];
-//                valCords[1] = currentConfig.getCurrentPos()[1] + updatedCords[1];
-//                if(currentConfig.getBoard()[valCords[0]][valCords[1]] == '0' &&
-//                        Integer.parseInt(String.valueOf(currentConfig.getBoard()[currentConfig.getCurrentPos()[0]][currentConfig.getCurrentPos()[1]])) > 1){
-//                    moveFunctionTip(currentConfig.getCurrentPos(), "w");
-//                }else {
-//                    try {
-//                        moveFunction(updatedCords);
-//                    }catch(ArrayIndexOutOfBoundsException a){
-//                        System.out.println("Please Enter a Valid Move");
-//                    }
-//                }
-//            }else if(direction.startsWith("s")){
-//                int[] updatedCords = new int[2];
-//                updatedCords[0] = 1;
-//                updatedCords[1] = 0;
-//
-//                //Checking to see if the tower needs to be tipped
-//                int[] valCords = new int[2];
-//                valCords[0] = currentConfig.getCurrentPos()[0] + updatedCords[0];
-//                valCords[1] = currentConfig.getCurrentPos()[1] + updatedCords[1];
-//                if(currentConfig.getBoard()[valCords[0]][valCords[1]] == '0' &&
-//                        Integer.parseInt(String.valueOf(currentConfig.getBoard()[currentConfig.getCurrentPos()[0]][currentConfig.getCurrentPos()[1]])) > 1){
-//                    moveFunctionTip(currentConfig.getCurrentPos(), "s");
-//                }else {
-//                    try {
-//                        moveFunction(updatedCords);
-//                    }catch(ArrayIndexOutOfBoundsException a){
-//                        System.out.println("Please Enter a Valid Move");
-//                    }
-//                }
-//            }else if(direction.startsWith("e")) {
-//                int[] updatedCords = new int[2];
-//                updatedCords[0] = 0;
-//                updatedCords[1] = 1;
-//
-//                //Checking to see if the tower needs to be tipped
-//                int[] valCords = new int[2];
-//                valCords[0] = currentConfig.getCurrentPos()[0];
-//                valCords[1] = currentConfig.getCurrentPos()[1] + 1;
-//                if (currentConfig.getBoard()[valCords[0]][valCords[1]] == '0' &&
-//                        Integer.parseInt(String.valueOf(currentConfig.getBoard()[currentConfig.getCurrentPos()[0]][currentConfig.getCurrentPos()[1]])) > 1) {
-//                    moveFunctionTip(currentConfig.getCurrentPos(), "e");
-//                } else {
-//                    moveFunction(updatedCords);
-//                }
-//            }
-//        }catch(ArrayIndexOutOfBoundsException a){
-//            System.out.println("Please Enter a Valid Move");
-//        }
-//    }
-//
-//    /**
-//     * Actually moves the tipper(used in move)
-//     * @param cords the current position of the tipper
-//     */
-//    public void moveFunction(int[] cords){
-//        int[] newPos = new int[2];
-//        newPos[0] = currentConfig.getCurrentPos()[0] + cords[0];
-//        newPos[1] = currentConfig.getCurrentPos()[1] + cords[1];
-//        if(validMove(newPos)) {
-//            currentConfig = new TipOverConfig(currentConfig.getNumRows(), currentConfig.getNumCols(), currentConfig.getStartCords(), currentConfig.getGoalCords(), newPos, currentConfig.getBoard());
-//        }else{
-//            System.out.println("Please Enter a Valid Move");
-//        }
-//    }
-//
-//    /**
-//     * The move function called if the tipper cannot move in a specific direction but can tip a tower
-//     * @param cords the current position of the tipper
-//     * @param direction the direction to tip
-//     */
-//    public void moveFunctionTip(int[] cords, String direction){
-//        int towerSize = Integer.parseInt(String.valueOf(currentConfig.getBoard()[currentConfig.getCurrentPos()[0]][currentConfig.getCurrentPos()[1]]));
-//        if(direction == "n" && canTip(cords, direction)){
-//            for(int i=1; i<= towerSize; i++){
-//                currentConfig.getBoard()[cords[0] - i][cords[1]] = '1';
-//            }
-//            currentConfig.getBoard()[cords[0]][cords[1]] = '0';
-//            cords[0] -= 1;
-//            currentConfig.setCurrentPos(cords);
-//        }else if(direction == "w" && canTip(cords, direction)){
-//            for(int i=1; i<= towerSize; i++){
-//                currentConfig.getBoard()[cords[0]][cords[1] - i] = '1';
-//            }
-//            currentConfig.getBoard()[cords[0]][cords[1]] = '0';
-//            cords[1] -= 1;
-//            currentConfig.setCurrentPos(cords);
-//        }else if(direction == "s" && canTip(cords, direction)){
-//            for(int i=1; i<= towerSize; i++){
-//                currentConfig.getBoard()[cords[0] + i][cords[1]] = '1';
-//            }
-//            currentConfig.getBoard()[cords[0]][cords[1]] = '0';
-//            cords[0] += 1;
-//            currentConfig.setCurrentPos(cords);
-//        }else if( direction == "e" && canTip(cords, direction)){
-//            for(int i=1; i<= towerSize; i++){
-//                currentConfig.getBoard()[cords[0]][cords[1] + i] = '1';
-//            }
-//            currentConfig.getBoard()[cords[0]][cords[1]] = '0';
-//            cords[1] += 1;
-//            currentConfig.setCurrentPos(cords);
-//        }else{
-//            System.out.println("Please Enter a Valid Move");
-//        }
-//    }
-//
-//    /**
-//     * Checks to see if the tower can be tipper
-//     * @param cords the current position
-//     * @param direction the direction to tip in
-//     * @return true or false if the tipped tower will fit
-//     */
-//    public boolean canTip(int[] cords, String direction){
-//        int towerSize = Integer.parseInt(String.valueOf(currentConfig.getBoard()[currentConfig.getCurrentPos()[0]][currentConfig.getCurrentPos()[1]]));
-//        if(direction == "n"){
-//            for(int i=1; i<= towerSize; i++){
-//                if(currentConfig.getBoard()[cords[0] - i][cords[1]] != '0' || cords[0] - i <0){
-//                    return false;
-//                }
-//            }
-//        }else if(direction == "w"){
-//            for(int i=1; i<= towerSize; i++){
-//                if(currentConfig.getBoard()[cords[0]][cords[1] - i] != '0' || cords[1] - i <0){
-//                    return false;
-//                }
-//            }
-//        }else if(direction == "s"){
-//            for(int i=1; i<= towerSize; i++){
-//                if(currentConfig.getBoard()[cords[0] + i][cords[1]] != '0' || cords[0] + i >= currentConfig.getNumRows()){
-//                    return false;
-//                }
-//            }
-//        }else if( direction == "e"){
-//            for(int i=1; i<= towerSize; i++){
-//                if(currentConfig.getBoard()[cords[0]][cords[1] + i] != '0' || cords[1] + i >= currentConfig.getNumCols()){
-//                    return false;
-//                }
-//            }
-//        }
-//        return true;
-//    }
-//
-//    /**
-//     * Checks to see if the movment in a direction is withing the bounds of the configs 2D array
-//     * @param loc the position that we are checking
-//     * @return true or false if the position is valid or not
-//     */
-//    public boolean validMove(int[] loc){
-//        if(loc[0] < currentConfig.getNumRows() && loc[0] >=0 && loc[1] < currentConfig.getNumCols() && loc[1] >= 0 && currentConfig.getBoard()[loc[0]][loc[1]] != '0'){
-//            return true;
-//        }
-//        return false;
-//    }
+    public void go(String direction){
+        boolean canGo = currentConfig.getMoveDirections(selectedCoords[0], selectedCoords[1]).contains(direction.toUpperCase());
+        if(canGo){
+            if(currentConfig.getBoard()[selectedCoords[0]][selectedCoords[1]] == 'E'){
+                currentConfig.setBoard(currentConfig.updateBoard(currentConfig.getBoard(), selectedCoords[0], selectedCoords[1], direction));
+                //find new coordinates of explorer
+                int[] newExplorerCoords = new int[2];
+                for(int x = 0; x < currentConfig.getBoard().length; x++){
+                    for(int y = 0; y < currentConfig.getBoard()[0].length; y++){
+                        if(currentConfig.getBoard()[x][y] == 'E'){
+                            newExplorerCoords[0] = x;
+                            newExplorerCoords[1] = y;
+                        }
+                    }
+                }
+                currentConfig.setExplorerCoords(newExplorerCoords);
+            }else{
+                currentConfig.setBoard(currentConfig.updateBoard(currentConfig.getBoard(), selectedCoords[0], selectedCoords[1], direction));
+            }
+        }else{
+            System.out.println("Invalid go command");
+        }
+    }
 
     /**
      * Checks if the current configuration is the solution
