@@ -155,7 +155,7 @@ public class LunarLandingModel {
                 int[] newExplorerCoords = new int[2];
                 for(int x = 0; x < currentConfig.getBoard().length; x++){
                     for(int y = 0; y < currentConfig.getBoard()[0].length; y++){
-                        if(currentConfig.getBoard()[x][y] == 'E'){
+                        if(newBoard[x][y] == 'E'){
                             newExplorerCoords[0] = x;
                             newExplorerCoords[1] = y;
                         }

@@ -54,11 +54,11 @@ public class LunarLandingPTUI implements Observer<LunarLandingModel, Object>{
                 } else { //help command
                     displayHelp();
                 }
-            }else if(words.length > 0 && words[0].startsWith("c")){
+            }else if(words.length > 0 && words[0].startsWith("c")){ //choose command
                 int row = Integer.parseInt(words[1]);
                 int col = Integer.parseInt(words[2]);
                 this.model.choose(row, col);
-            }else if(words.length > 0 && words[0].startsWith("g")){
+            }else if(words.length > 0 && words[0].startsWith("g")){ //go command
                 String direction = words[1];
                 this.model.go(direction.substring(0,1).toUpperCase());
                 update(this.model, null);
