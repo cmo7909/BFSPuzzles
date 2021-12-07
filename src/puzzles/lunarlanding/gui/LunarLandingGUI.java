@@ -16,7 +16,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import puzzles.lunarlanding.model.LunarLandingConfig;
-import puzzles.lunarlanding.model.LunarLandingModel;
 
 import java.awt.*;
 import java.io.File;
@@ -40,6 +39,7 @@ public class LunarLandingGUI extends Application
     private LunarLandingConfig copyConfig;
     private GridPane gameGrid;
     private Desktop desktop = Desktop.getDesktop();
+    private ArrayList<String> robotFiles = new ArrayList<>();
 
     /**
      * Gets the LunarLanding object's data in order to create the objects necessary for the GUI
@@ -93,7 +93,18 @@ public class LunarLandingGUI extends Application
      */
     private static void configureFileChooser(final FileChooser fileChooser){
         fileChooser.setTitle("Choose a text file to load");
-        fileChooser.setInitialDirectory(new File("data/tipover"));
+        fileChooser.setInitialDirectory(new File("data/lunarlanding"));
+    }
+
+    private void fillRobotFiles(){
+        robotFiles.add("resources/robot-blue.png");
+        robotFiles.add("resources/robot-green.png");
+        robotFiles.add("resources/robot-lightblue.png");
+        robotFiles.add("resources/robot-orange.png");
+        robotFiles.add("resources/robot-pink.png");
+        robotFiles.add("resources/robot-purple.png");
+        robotFiles.add("resources/robot-white.png");
+        robotFiles.add("resources/robot-yellow.png");
     }
 
     /**
@@ -102,6 +113,11 @@ public class LunarLandingGUI extends Application
      */
     @Override
     public void start( Stage stage ) {
+        fillRobotFiles();
+        ArrayList<String> robotFilesCopy = new ArrayList<>();
+        for(int i = 0; i < robotFiles.size(); i++){
+            robotFilesCopy.add(robotFiles.get(i));
+        }
         final FileChooser fileChooser = new FileChooser();
         stage.setTitle( "Lunar Landing" );
         this.gameModel.addObserver(this);
@@ -120,18 +136,45 @@ public class LunarLandingGUI extends Application
             for(int c=0; c<mainConfig.getNumCols(); c++){
                 String boardString = String.valueOf(mainConfig.getBoard()[r][c]);
                 Button button = new Button();
-                if(boardString.equals("0")){
+                button.setPrefSize(100, 100);
+                if(!boardString.equals("0")) {
+                    int finalR = r;
+                    int finalC = c;
+                    button.setOnAction(new EventHandler<ActionEvent>() {
+                        /**
+                         * Handles what happens after the user clicks on a figure
+                         * @param e the event occurring
+                         */
+                        @Override
+                        public void handle(final ActionEvent e) {
+                            gameModel.choose(finalR, finalC);
+                        }
+                    });
+                }
+                if(mainConfig.getLanderCoords()[0] == r && mainConfig.getLanderCoords()[1] == c){
+                    Image lander = new Image(getClass().getResourceAsStream("resources/lander.png"));
+                    button.setGraphic(new ImageView(lander));
+                }if(boardString.equals("0")){
                     button.setStyle("-fx-background-color: gray;");
-                    button.setPrefSize(100, 100);
                 }else if(boardString.equals("E")){
-//                    Image explorer = new Image(getClass().getResourceAsStream("resources/explorer.png"));
                     Image explorer = new Image(getClass().getResourceAsStream("resources/sus.png"));
                     button.setGraphic(new ImageView(explorer));
-                    button.setPrefSize(100, 100);
+                }else if(boardString.equals("B")){
+                    button.setGraphic(new ImageView(new Image(getClass().getResourceAsStream(robotFiles.get(0)))));
+                }else if(boardString.equals("G")){
+                    button.setGraphic(new ImageView(new Image(getClass().getResourceAsStream(robotFiles.get(1)))));
+                }else if(boardString.equals("L")){
+                    button.setGraphic(new ImageView(new Image(getClass().getResourceAsStream(robotFiles.get(2)))));
+                }else if(boardString.equals("O")){
+                    button.setGraphic(new ImageView(new Image(getClass().getResourceAsStream(robotFiles.get(3)))));
+                }else if(boardString.equals("P")){
+                    button.setGraphic(new ImageView(new Image(getClass().getResourceAsStream(robotFiles.get(4)))));
+                }else if(boardString.equals("W")){
+                    button.setGraphic(new ImageView(new Image(getClass().getResourceAsStream(robotFiles.get(6)))));
+                }else if(boardString.equals("Y")){
+                    button.setGraphic(new ImageView(new Image(getClass().getResourceAsStream(robotFiles.get(7)))));
                 }else{
-                    //Set graphic to the image that corresponds to the boardString
-//                    button.setGraphic();
-                    button.setPrefSize(100, 100);
+                    button.setGraphic(new ImageView(new Image(getClass().getResourceAsStream(robotFilesCopy.remove(0)))));
                 }
                 gameGrid.add(button,c,r);
             }
@@ -160,7 +203,6 @@ public class LunarLandingGUI extends Application
 
             }
         });
-
         buttonsList.add(load);
 
         Button reload = new Button("Reload");
@@ -177,7 +219,7 @@ public class LunarLandingGUI extends Application
         hint.setOnAction(actionEvent -> {
             topLabel.setText(" ");
             if(!gameModel.hint()){
-                topLabel.setText("Hint Cannot find a solution\nplease press reload");
+                topLabel.setText("Unsolvable Board");
             }
             update(gameModel, null);
         });
@@ -191,69 +233,53 @@ public class LunarLandingGUI extends Application
         Button north = new Button("↑");
         north.setPrefSize(128, 36);
         north.setOnAction(actionEvent -> {
-//            topLabel.setText("");
-//            int row = gameModel.getCurrentConfig().getCurrentPos()[0];
-//            int col = gameModel.getCurrentConfig().getCurrentPos()[1];
-//            int[] pos = {row - 1, col};
-//            if(!gameModel.validMove(pos)){
-//                topLabel.setText("Please Select a Valid Move");
-//            }
-//            this.gameModel.move("n");
-//            if(gameModel.getCurrentConfig().getBoard()[row][col] == '0'){
-//                topLabel.setText("A Tower Has Been Tipped");
-//            }
-//            update(gameModel, null);
+            topLabel.setText("");
+            int[] selected = gameModel.getSelectedCoords();
+            boolean canGoNorth = gameModel.getCurrentConfig().getMoveDirections(selected[0], selected[1]).contains("N");
+            if(!canGoNorth){
+                topLabel.setText("Please Select a Valid Move");
+            }
+            this.gameModel.go("N");
+            update(gameModel, null);
         });
 
         Button west = new Button("←");
         west.setPrefSize(64, 36);
         west.setOnAction(actionEvent -> {
-//            topLabel.setText("");
-//            int row = gameModel.getCurrentConfig().getCurrentPos()[0];
-//            int col = gameModel.getCurrentConfig().getCurrentPos()[1];
-//            int[] pos = {row, col - 1};
-//            if(!(gameModel.validMove(pos))){
-//                topLabel.setText("Please Select a Valid Move");
-//            }
-//            this.gameModel.move("w");
-//            if(gameModel.getCurrentConfig().getBoard()[row][col] == '0'){
-//                topLabel.setText("A Tower Has Been Tipped");
-//            }
-//            update(gameModel, null);
+            topLabel.setText("");
+            int[] selected = gameModel.getSelectedCoords();
+            boolean canGoWest = gameModel.getCurrentConfig().getMoveDirections(selected[0], selected[1]).contains("W");
+            if(!canGoWest){
+                topLabel.setText("Please Select a Valid Move");
+            }
+            this.gameModel.go("W");
+            update(gameModel, null);
         });
 
         Button south = new Button("↓");
         south.setPrefSize(128, 36);
         south.setOnAction(actionEvent -> {
-//            topLabel.setText("");
-//            int row = gameModel.getCurrentConfig().getCurrentPos()[0];
-//            int col = gameModel.getCurrentConfig().getCurrentPos()[1];
-//            int[] pos = {row + 1, col};
-//            if(!(gameModel.validMove(pos))){
-//                topLabel.setText("Please Select a Valid Move");
-//            }
-//            this.gameModel.move("s");
-//            if(gameModel.getCurrentConfig().getBoard()[row][col] == '0'){
-//                topLabel.setText("A Tower Has Been Tipped");
-//            }
-//            update(gameModel, null);
+            topLabel.setText("");
+            int[] selected = gameModel.getSelectedCoords();
+            boolean canGoSouth = gameModel.getCurrentConfig().getMoveDirections(selected[0], selected[1]).contains("S");
+            if(!canGoSouth){
+                topLabel.setText("Please Select a Valid Move");
+            }
+            this.gameModel.go("S");
+            update(gameModel, null);
         });
 
         Button east = new Button("→");
         east.setPrefSize(64, 36);
         east.setOnAction(actionEvent -> {
-//            topLabel.setText("");
-//            int row = gameModel.getCurrentConfig().getCurrentPos()[0];
-//            int col = gameModel.getCurrentConfig().getCurrentPos()[1];
-//            int[] pos = {row, col + 1};
-//            if(!gameModel.validMove(pos)){
-//                topLabel.setText("Please Select a Valid Move");
-//            }
-//            this.gameModel.move("e");
-//            if(gameModel.getCurrentConfig().getBoard()[row][col] == '0'){
-//                topLabel.setText("A Tower Has Been Tipped");
-//            }
-//            update(gameModel,null);
+            topLabel.setText("");
+            int[] selected = gameModel.getSelectedCoords();
+            boolean canGoEast = gameModel.getCurrentConfig().getMoveDirections(selected[0], selected[1]).contains("E");
+            if(!canGoEast){
+                topLabel.setText("Please Select a Valid Move");
+            }
+            this.gameModel.go("E");
+            update(gameModel, null);
         });
 
         arrows.setTop(north);
@@ -265,13 +291,6 @@ public class LunarLandingGUI extends Application
         stage.setScene(mainScene);
         stage.setResizable(false);
         stage.show();
-//        stage.show();
-//        Image spaceship = new Image(LunarLandingGUI.class.getResourceAsStream("resources/lander.png"));
-//        Button temp = new Button();
-//        temp.setGraphic( new ImageView( spaceship ) );
-//        Scene scene = new Scene( temp, 640, 480 );
-//        stage.setScene( scene );
-//        stage.show();
     }
 
     /**
@@ -281,15 +300,55 @@ public class LunarLandingGUI extends Application
      */
     @Override
     public void update( LunarLandingModel lunarLandingModel, Object o ) {
+        ArrayList<String> robotFilesCopy = new ArrayList<>();
+        for(int i = 0; i < robotFiles.size(); i++){
+            robotFilesCopy.add(robotFiles.get(i));
+        }
         for (int r = 0; r < gameModel.getCurrentConfig().getNumRows(); r++) {
             for (int c = 0; c < gameModel.getCurrentConfig().getNumCols(); c++) {
+                String boardString = String.valueOf(gameModel.getCurrentConfig().getBoard()[r][c]);
                 Button button = new Button();
-                if (gameModel.getCurrentConfig().getBoard()[r][c] == '0') {
-                    button.setStyle("-fx-background-color: gray;" + "-fx-text-fill: white");
-                }// else if (r == gameModel.getCurrentConfig().getGoalCords()[0] && c == gameModel.getCurrentConfig().getGoalCords()[1]) {
-//                    button.setStyle("-fx-background-color: blue;" + "-fx-text-fill: white");
-//                }
-                gameGrid.add(button, c, r);
+                button.setPrefSize(100, 100);
+                if(!boardString.equals("0")) {
+                    int finalR = r;
+                    int finalC = c;
+                    button.setOnAction(new EventHandler<ActionEvent>() {
+                        /**
+                         * Handles what happens after the user clicks on a figure
+                         * @param e the event occurring
+                         */
+                        @Override
+                        public void handle(final ActionEvent e) {
+                            gameModel.choose(finalR, finalC);
+                        }
+                    });
+                }
+                if(gameModel.getCurrentConfig().getLanderCoords()[0] == r && gameModel.getCurrentConfig().getLanderCoords()[1] == c){
+                    Image lander = new Image(getClass().getResourceAsStream("resources/lander.png"));
+                    button.setGraphic(new ImageView(lander));
+                }if(boardString.equals("0")){
+                    button.setStyle("-fx-background-color: gray;");
+                }else if(boardString.equals("E")){
+                    Image explorer = new Image(getClass().getResourceAsStream("resources/sus.png"));
+                    button.setGraphic(new ImageView(explorer));
+                }else if(boardString.equals("B")){
+                    button.setGraphic(new ImageView(new Image(getClass().getResourceAsStream(robotFiles.get(0)))));
+                }else if(boardString.equals("G")){
+                    button.setGraphic(new ImageView(new Image(getClass().getResourceAsStream(robotFiles.get(1)))));
+                }else if(boardString.equals("L")){
+                    button.setGraphic(new ImageView(new Image(getClass().getResourceAsStream(robotFiles.get(2)))));
+                }else if(boardString.equals("O")){
+                    button.setGraphic(new ImageView(new Image(getClass().getResourceAsStream(robotFiles.get(3)))));
+                }else if(boardString.equals("P")){
+                    button.setGraphic(new ImageView(new Image(getClass().getResourceAsStream(robotFiles.get(4)))));
+                }else if(boardString.equals("W")){
+                    button.setGraphic(new ImageView(new Image(getClass().getResourceAsStream(robotFiles.get(6)))));
+                }else if(boardString.equals("Y")){
+                    button.setGraphic(new ImageView(new Image(getClass().getResourceAsStream(robotFiles.get(7)))));
+                }else{
+                    button.setGraphic(new ImageView(new Image(getClass().getResourceAsStream(robotFilesCopy.remove(0)))));
+                }
+                gameGrid.add(button,c,r);
             }
         }
         if(gameModel.getCurrentConfig().isSolution()) {
@@ -312,6 +371,42 @@ public class LunarLandingGUI extends Application
      * @param args the filename to use to get data from
      */
     public void GUIReload(String[] args){
-        //TODO write method
+        String fileName = "data/lunarlanding/" + args[0];
+        try (Scanner in = new Scanner(new File(fileName))) {
+            String line = in.nextLine();
+            String[] fields = line.split("\\s+");
+            int numRows = Integer.valueOf(fields[0]);
+            int numCols = Integer.valueOf(fields[1]);
+            int[] landerCoords = new int[]{Integer.valueOf(fields[2]), Integer.valueOf(fields[3])};
+            char [][] gameBoard = new char[numRows][numCols];
+            for(int i = 0; i < gameBoard.length; i++){
+                for(int j = 0; j < gameBoard[0].length; j++){
+                    gameBoard[i][j] = '0';
+                }
+            }
+            while(in.hasNextLine()){
+                line = in.nextLine().trim();
+                if(line.equals("")){
+                    break;
+                }
+                fields = line.split("\\s+");
+                gameBoard[Integer.parseInt(fields[1])][Integer.parseInt(fields[2])] = fields[0].charAt(0);
+            }
+            //find coordinates of explorer
+            int[] explorerCoords = new int[2];
+            for(int x = 0; x < gameBoard.length; x++){
+                for(int y = 0; y < gameBoard[0].length; y++){
+                    if(gameBoard[x][y] == 'E'){
+                        explorerCoords[0] = x;
+                        explorerCoords[1] = y;
+                    }
+                }
+            }
+            this.mainConfig = new LunarLandingConfig(numRows, numCols, landerCoords, explorerCoords, gameBoard);
+            this.copyConfig = new LunarLandingConfig(numRows, numCols, landerCoords, explorerCoords, gameBoard);
+            this.gameModel = new LunarLandingModel(this.mainConfig, this.copyConfig);
+            Stage newStage = new Stage();
+            start(newStage);
+        } catch (FileNotFoundException f){}
     }
 }

@@ -79,7 +79,6 @@ public class TipOverPTUI implements Observer<TipOverModel, Object> {
         System.out.println(o);
         if(o.configIsSolution()){
             System.out.println("You Win!");
-            System.exit(1);
         }
     }
 

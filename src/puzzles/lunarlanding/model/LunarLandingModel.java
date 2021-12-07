@@ -47,6 +47,12 @@ public class LunarLandingModel {
     }
 
     /**
+     * Getter for the coordinates which were selected by a choose command
+     * @return the selected coordinates
+     */
+    public int[] getSelectedCoords(){return this.selectedCoords;}
+
+    /**
      * Constructior for a LunarLanding model
      * @param lunarLanding the first config that will be modified
      * @param copy the same as tipover but is not modified and used to reset tipover

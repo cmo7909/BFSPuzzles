@@ -61,8 +61,8 @@ public class LunarLandingConfig implements Configuration {
         return this.explorerCoords;
     }
     public void setExplorerCoords(int[] pos){
-        this.landerCoords[0] = pos[0];
-        this.landerCoords[1] = pos[1];
+        this.explorerCoords[0] = pos[0];
+        this.explorerCoords[1] = pos[1];
     }
 
     public char[][] getBoard(){
