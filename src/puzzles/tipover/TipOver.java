@@ -10,7 +10,8 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
- * DESCRIPTION
+ * Runner for the Tipover config, gets the solution of a given configuration
+ * and prints out the solution steps with the number of possibilities.
  * @author Craig O'Connor
  * November 2021
  */

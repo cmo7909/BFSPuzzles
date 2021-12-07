@@ -10,7 +10,8 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
- * DESCRIPTION
+ * Runner for the LunarLanding config, gets the solution of a given configuration
+ * and prints out the solution steps with the number of possibilities.
  * @author Andrew Moulton
  * November 2021
  */
