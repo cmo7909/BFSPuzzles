@@ -39,10 +39,11 @@ public class TipOverGUI extends Application
 
     /**
      * Gets the tipover objects data in order to create the objects necessary for the GUI
+     *
      * @throws Exception
      */
     @Override
-    public void init() throws Exception{
+    public void init() throws Exception {
         List<String> args = getParameters().getRaw();
         String fileName = args.get(0);
         try (Scanner in = new Scanner(new File(fileName))) {
@@ -71,22 +72,24 @@ public class TipOverGUI extends Application
             this.mainConfig = new TipOverConfig(numRows, numCols, startPos, endPos, startPos, gameBoard);
             this.copyConfig = new TipOverConfig(numRows, numCols, startPos, endPos, startPos, gameBoard);
             this.gameModel = new TipOverModel(this.mainConfig, this.copyConfig);
-        } catch (FileNotFoundException f){
+        } catch (FileNotFoundException f) {
             System.out.println("Please enter a valid file");
         }
     }
 
     /**
      * Configures the file chooser with the desired beginning directory
+     *
      * @param fileChooser the file chooser object
      */
-     private static void configureFileChooser(final FileChooser fileChooser){
+    private static void configureFileChooser(final FileChooser fileChooser) {
         fileChooser.setTitle("Choose a text file to load");
         fileChooser.setInitialDirectory(new File("data/tipover"));
-     }
+    }
 
     /**
      * The setup method for the gui and its components
+     *
      * @param stage the stage to add the GUI components to
      */
     @Override
@@ -107,15 +110,15 @@ public class TipOverGUI extends Application
         functions.setBottom(interactionGrid);
         layout.setBottom(bottomLable);
 
-        for(int r=0; r<mainConfig.getNumRows(); r++){
-            for(int c=0; c<mainConfig.getNumCols(); c++){
+        for (int r = 0; r < mainConfig.getNumRows(); r++) {
+            for (int c = 0; c < mainConfig.getNumCols(); c++) {
                 Button button = new Button(String.valueOf(mainConfig.getBoard()[r][c]));
-                if(r == mainConfig.getCurrentPos()[0] && c == mainConfig.getCurrentPos()[1]){
+                if (r == mainConfig.getCurrentPos()[0] && c == mainConfig.getCurrentPos()[1]) {
                     button.setStyle("-fx-background-color: red;" + "-fx-text-fill: white");
-                }else if(r == mainConfig.getGoalCords()[0] && c == mainConfig.getGoalCords()[1]){
+                } else if (r == mainConfig.getGoalCords()[0] && c == mainConfig.getGoalCords()[1]) {
                     button.setStyle("-fx-background-color: blue;" + "-fx-text-fill: white");
                 }
-                gameGrid.add(button,c,r);
+                gameGrid.add(button, c, r);
             }
         }
         layout.setLeft(gameGrid);
@@ -142,7 +145,7 @@ public class TipOverGUI extends Application
             }
         });
 
-        
+
         buttonsList.add(load);
 
         Button reload = new Button("Reload");
@@ -156,15 +159,15 @@ public class TipOverGUI extends Application
         Button hint = new Button("Hint");
         hint.setOnAction(actionEvent -> {
             topLabel.setText(" ");
-            if(!gameModel.hint()){
+            if (!gameModel.hint()) {
                 topLabel.setText("Hint Cannot find a solution,\nplease press reload");
             }
             update(gameModel, null);
         });
         buttonsList.add(hint);
 
-        for(int i=0; i<3; i++){
-            for(int j=0; j<1; j++){
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 1; j++) {
                 interactionGrid.add(buttonsList.get(i), j, i);
             }
         }
@@ -174,14 +177,14 @@ public class TipOverGUI extends Application
             int row = gameModel.getCurrentConfig().getCurrentPos()[0];
             int col = gameModel.getCurrentConfig().getCurrentPos()[1];
             int[] pos = {row - 1, col};
-            if(!gameModel.validMove(pos)){
+            if (!gameModel.validMove(pos)) {
                 topLabel.setText("Please Select a Valid Move");
             }
-           this.gameModel.move("n");
-           if(gameModel.getCurrentConfig().getBoard()[row][col] == '0'){
-               topLabel.setText("A Tower Has Been Tipped");
-           }
-           update(gameModel, null);
+            this.gameModel.move("n");
+            if (gameModel.getCurrentConfig().getBoard()[row][col] == '0') {
+                topLabel.setText("A Tower Has Been Tipped");
+            }
+            update(gameModel, null);
         });
 
         Button west = new Button("←");
@@ -190,11 +193,11 @@ public class TipOverGUI extends Application
             int row = gameModel.getCurrentConfig().getCurrentPos()[0];
             int col = gameModel.getCurrentConfig().getCurrentPos()[1];
             int[] pos = {row, col - 1};
-            if(!(gameModel.validMove(pos))){
+            if (!(gameModel.validMove(pos))) {
                 topLabel.setText("Please Select a Valid Move");
             }
             this.gameModel.move("w");
-            if(gameModel.getCurrentConfig().getBoard()[row][col] == '0'){
+            if (gameModel.getCurrentConfig().getBoard()[row][col] == '0') {
                 topLabel.setText("A Tower Has Been Tipped");
             }
             update(gameModel, null);
@@ -206,11 +209,11 @@ public class TipOverGUI extends Application
             int row = gameModel.getCurrentConfig().getCurrentPos()[0];
             int col = gameModel.getCurrentConfig().getCurrentPos()[1];
             int[] pos = {row + 1, col};
-            if(!(gameModel.validMove(pos))){
+            if (!(gameModel.validMove(pos))) {
                 topLabel.setText("Please Select a Valid Move");
             }
             this.gameModel.move("s");
-            if(gameModel.getCurrentConfig().getBoard()[row][col] == '0'){
+            if (gameModel.getCurrentConfig().getBoard()[row][col] == '0') {
                 topLabel.setText("A Tower Has Been Tipped");
             }
             update(gameModel, null);
@@ -222,14 +225,14 @@ public class TipOverGUI extends Application
             int row = gameModel.getCurrentConfig().getCurrentPos()[0];
             int col = gameModel.getCurrentConfig().getCurrentPos()[1];
             int[] pos = {row, col + 1};
-            if(!gameModel.validMove(pos)){
+            if (!gameModel.validMove(pos)) {
                 topLabel.setText("Please Select a Valid Move");
             }
             this.gameModel.move("e");
-            if(gameModel.getCurrentConfig().getBoard()[row][col] == '0'){
+            if (gameModel.getCurrentConfig().getBoard()[row][col] == '0') {
                 topLabel.setText("A Tower Has Been Tipped");
             }
-            update(gameModel,null);
+            update(gameModel, null);
         });
 
         arrows.setTop(north);
@@ -245,43 +248,46 @@ public class TipOverGUI extends Application
 
     /**
      * Method that updates the display after an action has occurred
+     *
      * @param tipOverModel the tipover model to update
-     * @param o always null
+     * @param o            always null
      */
     @Override
     public void update(TipOverModel tipOverModel, Object o) {
 
-            for (int r = 0; r < gameModel.getCurrentConfig().getNumRows(); r++) {
-                for (int c = 0; c < gameModel.getCurrentConfig().getNumCols(); c++) {
-                    Button button = new Button(String.valueOf(gameModel.getCurrentConfig().getBoard()[r][c]));
-                    if (r == gameModel.getCurrentConfig().getCurrentPos()[0] && c == gameModel.getCurrentConfig().getCurrentPos()[1]) {
-                        button.setStyle("-fx-background-color: red;" + "-fx-text-fill: white");
-                    } else if (r == gameModel.getCurrentConfig().getGoalCords()[0] && c == gameModel.getCurrentConfig().getGoalCords()[1]) {
-                        button.setStyle("-fx-background-color: blue;" + "-fx-text-fill: white");
-                    }
-                    gameGrid.add(button, c, r);
+        for (int r = 0; r < gameModel.getCurrentConfig().getNumRows(); r++) {
+            for (int c = 0; c < gameModel.getCurrentConfig().getNumCols(); c++) {
+                Button button = new Button(String.valueOf(gameModel.getCurrentConfig().getBoard()[r][c]));
+                if (r == gameModel.getCurrentConfig().getCurrentPos()[0] && c == gameModel.getCurrentConfig().getCurrentPos()[1]) {
+                    button.setStyle("-fx-background-color: red;" + "-fx-text-fill: white");
+                } else if (r == gameModel.getCurrentConfig().getGoalCords()[0] && c == gameModel.getCurrentConfig().getGoalCords()[1]) {
+                    button.setStyle("-fx-background-color: blue;" + "-fx-text-fill: white");
                 }
+                gameGrid.add(button, c, r);
             }
-        if(gameModel.getCurrentConfig().isSolution()) {
+        }
+        if (gameModel.getCurrentConfig().isSolution()) {
             topLabel.setText("You Win!");
         }
     }
 
     /**
      * Main method to start the process
+     *
      * @param args the file to get the data from in init()
      * @throws FileNotFoundException
      */
     public static void main(String[] args) throws FileNotFoundException {
-            Application.launch(args);
+        Application.launch(args);
     }
 
     /**
      * Once the reload button is pressed init cannot be called again so to work around this
      * the method is used to create the objects again then just call start at the end.
+     *
      * @param args the filename to use to get data from
      */
-    public void forReload(String[] args){
+    public void forReload(String[] args) {
         String fileName = "data/tipover/" + args[0];
         try (Scanner in = new Scanner(new File(fileName))) {
             String line = in.nextLine();
@@ -311,6 +317,15 @@ public class TipOverGUI extends Application
             this.gameModel = new TipOverModel(this.mainConfig, this.copyConfig);
             Stage newStage = new Stage();
             start(newStage);
-        } catch (FileNotFoundException f){}
+        } catch (FileNotFoundException f) {
+        }
     }
+
 }
+
+
+
+
+
+
+
